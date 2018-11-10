@@ -1,0 +1,125 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Integration Test Stack
+
+
+Mappings:
+  LogMap:
+    PapertrailLog:
+      test: "logs7.papertrailapp.com:32515"
+
+  FunctionName:
+    GenerateUsersFunction:
+      test: test-generate-users-integration-test
+    ImageServiceTestFunction:
+      test: test-image-service-integration-test
+    FeedsServiceTestFunction:
+      test: test-feeds-service-integration-test
+    ActionsServiceTestFunction:
+      test: test-actions-service-integration-test
+    AuthServiceTestFunction:
+      test: test-auth-service-integration-test
+
+  ApiEndpoint:
+    Auth:
+      test: "https://cc3fs64abg.execute-api.eu-west-1.amazonaws.com/Prod"
+    Image:
+      test: "https://puta9o4g5b.execute-api.eu-west-1.amazonaws.com/Prod"
+    Actions:
+      test: "https://n9bgou3hqb.execute-api.eu-west-1.amazonaws.com/Prod"
+    Feeds:
+      test: "https://ag3euujsh4.execute-api.eu-west-1.amazonaws.com/Prod"
+
+Parameters:
+  Env:
+    Type: String
+    Default: test
+    AllowedValues:
+      - test
+    Description: Env name
+
+Globals:
+    Function:
+        Timeout: 300
+        MemorySize: 512
+        Runtime: go1.x
+        Environment:
+          Variables:
+            ENV: !Ref Env
+            PAPERTRAIL_LOG_ADDRESS: !FindInMap [LogMap, PapertrailLog, !Ref Env]
+            INTERNAL_START_AUTH_FUNCTION_NAME:
+              Fn::ImportValue:
+                !Join [ "-", [ !Ref Env, InternalStartAuthFunctionExport] ]
+            INTERNAL_COMPLETE_AUTH_FUNCTION_NAME:
+              Fn::ImportValue:
+                !Join [ "-", [ !Ref Env, InternalCompleteAuthFunctionExport] ]
+            AUTH_API_ENDPOINT: !FindInMap [ApiEndpoint, Auth, !Ref Env]
+            IMAGE_API_ENDPOINT: !FindInMap [ApiEndpoint, Image, !Ref Env]
+            ACTIONS_API_ENDPOINT: !FindInMap [ApiEndpoint, Actions, !Ref Env]
+            FEEDS_API_ENDPOINT: !FindInMap [ApiEndpoint, Feeds, !Ref Env]
+            CLEAN_AUTH_DB_FUNCTION_NAME:
+              Fn::ImportValue:
+                !Join [ "-", [ !Ref Env, InternalCleanDbAuthFunctionExport] ]
+            CLEAN_IMAGE_DB_FUNCTION_NAME:
+              Fn::ImportValue:
+                !Join [ "-", [ !Ref Env, InternalCleanDbImageFunctionExport] ]
+            CLEAN_RELATIONSHIPS_DB_FUNCTION_NAME:
+              Fn::ImportValue:
+                !Join [ "-", [ !Ref Env, InternalCleanDbRelationshipsFunctionExport] ]
+
+        Tags:
+          Company: Ringoid
+          Service: integration-test
+          Environment: !Ref Env
+
+Resources:
+
+  GenerateUsersFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !FindInMap [FunctionName, GenerateUsersFunction, !Ref Env]
+      Handler: create_users
+      CodeUri: ./create_users.zip
+      Description: Generate users function (integration tests)
+      Policies:
+        - AWSLambdaFullAccess
+
+  ImageServiceTestFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !FindInMap [FunctionName, ImageServiceTestFunction, !Ref Env]
+      Handler: test_image
+      CodeUri: ./test_image.zip
+      Description: Image service (integration tests)
+      Policies:
+        - AWSLambdaFullAccess
+
+  FeedsServiceTestFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !FindInMap [FunctionName, FeedsServiceTestFunction, !Ref Env]
+      Handler: test_feeds
+      CodeUri: ./test_feeds.zip
+      Description: Feeds service (integration tests)
+      Policies:
+        - AWSLambdaFullAccess
+
+  ActionsServiceTestFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !FindInMap [FunctionName, ActionsServiceTestFunction, !Ref Env]
+      Handler: test_actions
+      CodeUri: ./test_actions.zip
+      Description: Actions service (integration tests)
+      Policies:
+        - AWSLambdaFullAccess
+
+  AuthServiceTestFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !FindInMap [FunctionName, AuthServiceTestFunction, !Ref Env]
+      Handler: test_auth
+      CodeUri: ./test_auth.zip
+      Description: Auth service (integration tests)
+      Policies:
+        - AWSLambdaFullAccess
