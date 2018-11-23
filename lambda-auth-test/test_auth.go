@@ -14,22 +14,7 @@ func handler(ctx context.Context) error {
 
 	apimodel.CleanAllDB(lc)
 
-	apitests.StartVerificationWithOldBuildNum(lc)
-	apitests.StartVerificationWithWrongCountryCode(lc)
-	apitests.StartVerificationWithWrongPhone(lc)
-	apitests.StartVerificationWithWrongLocale(lc)
-	apitests.StartVerificationWithWrongDateTimeLegalAge(lc)
-	apitests.StartVerificationWithWrongDateTimePrivacyNotes(lc)
-	apitests.StartVerificationWithWrongDateTimeTermsAndConditions(lc)
-	apitests.StartVerificationWithWrongDeviceModel(lc)
-	apitests.StartVerificationWithWrongOsVersion(lc)
-
-	apitests.CompleteVerificationWithOldBuildNum(lc)
-	apitests.CompleteVerificationWithWrongSessionId(lc)
-	apitests.CompleteVerificationWithWrongVerificationCode(lc)
-
 	apitests.CreateUserProfileWithOldBuildNum(lc)
-	apitests.CreateUserProfileWithOldToken(lc)
 	apitests.CreateUserProfileWithWrongYearOfBirth(lc)
 	apitests.CreateUserProfileWithWrongSex(lc)
 

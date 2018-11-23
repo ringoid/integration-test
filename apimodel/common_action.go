@@ -17,8 +17,6 @@ import (
 
 var Anlogger *Logger
 
-var startFunctionName string
-var completeFunctionName string
 var clientLambda *lambda.Lambda
 var authApiEndpoint string
 var imageApiEndpoint string
@@ -55,18 +53,6 @@ func init() {
 		os.Exit(1)
 	}
 	Anlogger.Debugf(nil, "lambda-initialization : common_action.go : logger was successfully initialized")
-
-	startFunctionName, ok = os.LookupEnv("INTERNAL_START_AUTH_FUNCTION_NAME")
-	if !ok {
-		Anlogger.Fatalf(nil, "lambda-initialization : common_action.go : env can not be empty INTERNAL_START_AUTH_FUNCTION_NAME")
-	}
-	Anlogger.Debugf(nil, "lambda-initialization : common_action.go : start with INTERNAL_START_AUTH_FUNCTION_NAME = [%s]", startFunctionName)
-
-	completeFunctionName, ok = os.LookupEnv("INTERNAL_COMPLETE_AUTH_FUNCTION_NAME")
-	if !ok {
-		Anlogger.Fatalf(nil, "lambda-initialization : common_action.go : env can not be empty INTERNAL_COMPLETE_AUTH_FUNCTION_NAME")
-	}
-	Anlogger.Debugf(nil, "lambda-initialization : common_action.go : start with INTERNAL_COMPLETE_AUTH_FUNCTION_NAME = [%s]", completeFunctionName)
 
 	authApiEndpoint, ok = os.LookupEnv("AUTH_API_ENDPOINT")
 	if !ok {
@@ -122,77 +108,6 @@ func init() {
 	Anlogger.Debugf(nil, "lambda-initialization : common_action.go : lambda client was successfully initialized")
 }
 
-func Start(countryCallingCode int, phone string, lc *lambdacontext.LambdaContext) AuthResp {
-	Anlogger.Debugf(lc, "common_action.go : start user registration, code [%d], phone [%s]", countryCallingCode, phone)
-
-	request := StartReq{
-		CountryCallingCode:         countryCallingCode,
-		Phone:                      phone,
-		ClientValidationFail:       false,
-		Locale:                     "ru",
-		DateTimeLegalAge:           time.Now().Unix(),
-		DateTimePrivacyNotes:       time.Now().Unix(),
-		DateTimeTermsAndConditions: time.Now().Unix(),
-		DeviceModel:                "test device",
-		OsVersion:                  "test android",
-		Android:                    true,
-	}
-
-	jsonBody, err := json.Marshal(request)
-	if err != nil {
-		panic(err)
-	}
-
-	resp, err := clientLambda.Invoke(&lambda.InvokeInput{FunctionName: aws.String(startFunctionName), Payload: jsonBody})
-	if err != nil {
-		panic(err)
-	}
-
-	if *resp.StatusCode != 200 {
-		panic(err)
-	}
-
-	var response AuthResp
-	err = json.Unmarshal(resp.Payload, &response)
-	if err != nil {
-		panic(err)
-	}
-
-	Anlogger.Infof(lc, "common_action.go : successfully call start user registration, return response %v", response)
-	return response
-}
-
-func Complete(sessionId, verificationCode string, lc *lambdacontext.LambdaContext) VerifyResp {
-	Anlogger.Debugf(lc, "common_action.go : complete verification, sessionId [%s], code [%s]", sessionId, verificationCode)
-	request := VerifyReq{
-		SessionId:        sessionId,
-		VerificationCode: verificationCode,
-	}
-
-	jsonBody, err := json.Marshal(request)
-	if err != nil {
-		panic(err)
-	}
-
-	resp, err := clientLambda.Invoke(&lambda.InvokeInput{FunctionName: aws.String(completeFunctionName), Payload: jsonBody})
-	if err != nil {
-		panic(err)
-	}
-
-	if *resp.StatusCode != 200 {
-		panic(err)
-	}
-
-	var response VerifyResp
-	err = json.Unmarshal(resp.Payload, &response)
-	if err != nil {
-		panic(err)
-	}
-
-	Anlogger.Infof(lc, "common_action.go : successfully call complete verification, return response %v", response)
-	return response
-}
-
 func CleanAllDB(lc *lambdacontext.LambdaContext) {
 	Anlogger.Warnf(lc, "common_action.go : start clean all DB")
 	_, err := clientLambda.Invoke(&lambda.InvokeInput{FunctionName: aws.String(cleanAuthDbFunctionName),})
@@ -211,55 +126,19 @@ func CleanAllDB(lc *lambdacontext.LambdaContext) {
 }
 
 //Auth service
-
-func StartRealAuth(request StartReq, useValidBuildNum bool, lc *lambdacontext.LambdaContext) AuthResp {
-	Anlogger.Debugf(lc, "common_action.go : start real user registration, request %v, useValidBuildNum [%v]", request, useValidBuildNum)
-
-	jsonBody, err := json.Marshal(request)
-	if err != nil {
-		panic(err)
-	}
-
-	respBody := makePostRequest(authApiEndpoint, jsonBody, "/start_verification", useValidBuildNum)
-
-	response := AuthResp{}
-	err = json.Unmarshal(respBody, &response)
-	if err != nil {
-		panic(err)
-	}
-
-	Anlogger.Infof(lc, "common_action.go : successfully call real start user registration, return response %v", response)
-	return response
-}
-
-func CompleteRealAuth(request VerifyReq, useValidBuildNum bool, lc *lambdacontext.LambdaContext) VerifyResp {
-	Anlogger.Debugf(lc, "common_action.go : complete real verification, request %v, useValidBuildNum [%v]", request, useValidBuildNum)
-
-	jsonBody, err := json.Marshal(request)
-	if err != nil {
-		panic(err)
-	}
-
-	respBody := makePostRequest(authApiEndpoint, jsonBody, "/start_verification", useValidBuildNum)
-
-	response := VerifyResp{}
-	err = json.Unmarshal(respBody, &response)
-	if err != nil {
-		panic(err)
-	}
-
-	Anlogger.Infof(lc, "common_action.go : successfully call real complete verification, return response %v", response)
-	return response
-}
-
-func CreateUserProfile(accessToken string, yearOfBirth int, sex string, useValidBuildNum bool, lc *lambdacontext.LambdaContext) BaseResponse {
-	Anlogger.Debugf(lc, "common_action.go : create user profile, token [%s], yearOfBirth [%d], sex [%s], useValidBuildNum [%v]",
-		accessToken, yearOfBirth, sex, useValidBuildNum)
+func CreateUserProfile(yearOfBirth int, sex string, useValidBuildNum bool, lc *lambdacontext.LambdaContext) CreateResp {
+	Anlogger.Debugf(lc, "common_action.go : create user profile, yearOfBirth [%d], sex [%s], useValidBuildNum [%v]",
+		yearOfBirth, sex, useValidBuildNum)
 
 	request := CreateReq{
-		AccessToken: accessToken,
-		YearOfBirth: yearOfBirth,
-		Sex:         sex,
+		YearOfBirth:                yearOfBirth,
+		Sex:                        sex,
+		Locale:                     "ru",
+		DateTimeLegalAge:           time.Now().Unix(),
+		DateTimePrivacyNotes:       time.Now().Unix(),
+		DateTimeTermsAndConditions: time.Now().Unix(),
+		DeviceModel:                "test device",
+		OsVersion:                  "test android",
 	}
 	jsonBody, err := json.Marshal(request)
 	if err != nil {
@@ -268,7 +147,7 @@ func CreateUserProfile(accessToken string, yearOfBirth int, sex string, useValid
 
 	respBody := makePostRequest(authApiEndpoint, jsonBody, "/create_profile", useValidBuildNum)
 
-	response := BaseResponse{}
+	response := CreateResp{}
 	err = json.Unmarshal(respBody, &response)
 	if err != nil {
 		panic(err)

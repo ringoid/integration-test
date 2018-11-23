@@ -9,7 +9,7 @@ import (
 )
 
 func GetPresignWithOldBuildNumTest(lc *lambdacontext.LambdaContext) {
-	token := CreateUser("", "male", lc)
+	token := CreateUser("male", lc)
 	getPresignResp := apimodel.GetPresignUrl(token, false, lc)
 	if getPresignResp.ErrorCode != "TooOldAppVersionClientError" {
 		panic("there is no TooOldAppVersionClientError when call /get_presigned with old build num")
@@ -17,13 +17,8 @@ func GetPresignWithOldBuildNumTest(lc *lambdacontext.LambdaContext) {
 }
 
 func GetPresignWithOldAccessTokenTest(lc *lambdacontext.LambdaContext) {
-	uuid, err := uuid.NewV4()
-	if err != nil {
-		panic(err)
-	}
-	phone := uuid.String()
-	token := CreateUser(phone, "male", lc)
-	CreateUser(phone, "male", lc)
+	token := CreateUser("male", lc)
+	apimodel.Logout(token, true, lc)
 	getPresignResp := apimodel.GetPresignUrl(token, true, lc)
 	if getPresignResp.ErrorCode != "InvalidAccessTokenClientError" {
 		panic("there is no InvalidAccessTokenClientError when call /get_presigned with old token")
@@ -31,7 +26,7 @@ func GetPresignWithOldAccessTokenTest(lc *lambdacontext.LambdaContext) {
 }
 
 func GetOwnPhotosWithOldBuildNum(lc *lambdacontext.LambdaContext) {
-	token := CreateUser("", "male", lc)
+	token := CreateUser("male", lc)
 	getOwnPhotoResp := apimodel.GetOwnPhotos(token, apimodel.PhotoResolution480x640, false, lc)
 	if getOwnPhotoResp.ErrorCode != "TooOldAppVersionClientError" {
 		panic("there is no TooOldAppVersionClientError when call /get_own_photos with old build num")
@@ -39,14 +34,8 @@ func GetOwnPhotosWithOldBuildNum(lc *lambdacontext.LambdaContext) {
 }
 
 func GetOwnPhotosWithOldToken(lc *lambdacontext.LambdaContext) {
-	uuid, err := uuid.NewV4()
-	if err != nil {
-		panic(err)
-	}
-	phone := uuid.String()
-	token := CreateUser(phone, "male", lc)
-	CreateUser(phone, "male", lc)
-
+	token := CreateUser("male", lc)
+	apimodel.Logout(token, true, lc)
 	getOwnPhotoResp := apimodel.GetOwnPhotos(token, apimodel.PhotoResolution480x640, true, lc)
 	if getOwnPhotoResp.ErrorCode != "InvalidAccessTokenClientError" {
 		panic("there is no InvalidAccessTokenClientError when call /get_own_photos with old token")
@@ -54,7 +43,7 @@ func GetOwnPhotosWithOldToken(lc *lambdacontext.LambdaContext) {
 }
 
 func GetOwnPhotosWithWrongResolution(lc *lambdacontext.LambdaContext) {
-	token := CreateUser("", "male", lc)
+	token := CreateUser("male", lc)
 	getOwnPhotoResp := apimodel.GetOwnPhotos(token, apimodel.PhotoResolution480x640+"22", true, lc)
 	if getOwnPhotoResp.ErrorCode != "WrongParamsClientError" {
 		panic("there is no WrongParamsClientError when call /get_own_photos with wrong resolution")
@@ -62,7 +51,7 @@ func GetOwnPhotosWithWrongResolution(lc *lambdacontext.LambdaContext) {
 }
 
 func DeletePhotoWithOldBuildNum(lc *lambdacontext.LambdaContext) {
-	token := CreateUser("", "male", lc)
+	token := CreateUser("male", lc)
 	uuid, err := uuid.NewV4()
 	if err != nil {
 		panic(err)
@@ -78,9 +67,8 @@ func DeletePhotoWithOldAccessToken(lc *lambdacontext.LambdaContext) {
 	if err != nil {
 		panic(err)
 	}
-	phone := uuid.String()
-	token := CreateUser(phone, "male", lc)
-	CreateUser(phone, "male", lc)
+	token := CreateUser("male", lc)
+	apimodel.Logout(token, true, lc)
 	resp := apimodel.DeletePhoto(token, uuid.String(), true, lc)
 	if resp.ErrorCode != "InvalidAccessTokenClientError" {
 		panic("there is no InvalidAccessTokenClientError when call /delete_photo with old build num")
@@ -88,7 +76,7 @@ func DeletePhotoWithOldAccessToken(lc *lambdacontext.LambdaContext) {
 }
 
 func DeletePhotoWithEmptyPhotoId(lc *lambdacontext.LambdaContext) {
-	token := CreateUser("", "male", lc)
+	token := CreateUser("male", lc)
 	resp := apimodel.DeletePhoto(token, "", true, lc)
 	if resp.ErrorCode != "WrongParamsClientError" {
 		panic("there is no WrongParamsClientError when call /delete_photo with empty photo id")
@@ -97,7 +85,7 @@ func DeletePhotoWithEmptyPhotoId(lc *lambdacontext.LambdaContext) {
 
 func ImageTest(lc *lambdacontext.LambdaContext) {
 	apimodel.Anlogger.Debugf(lc, "images.go : start image service complex test")
-	token_1 := CreateUser("", "male", lc)
+	token_1 := CreateUser("male", lc)
 	//check that users doesn't have own photos
 	resp := apimodel.GetOwnPhotos(token_1, apimodel.PhotoResolution480x640, true, lc)
 	if len(resp.ErrorCode) != 0 {

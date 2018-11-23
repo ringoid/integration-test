@@ -3,7 +3,6 @@ package apitests
 import (
 	"github.com/aws/aws-lambda-go/lambdacontext"
 	"../apimodel"
-	"github.com/satori/go.uuid"
 )
 
 const (
@@ -19,7 +18,7 @@ const (
 )
 
 func ActionsWithOldBuildNum(lc *lambdacontext.LambdaContext) {
-	token := CreateUser("", "female", lc)
+	token := CreateUser("female", lc)
 	actions := []apimodel.Action{apimodel.Action{
 		ActionType:    likeActionType,
 		SourceFeed:    newFacesSourceFeed,
@@ -37,13 +36,8 @@ func ActionsWithOldBuildNum(lc *lambdacontext.LambdaContext) {
 }
 
 func ActionsWithOldAccessToken(lc *lambdacontext.LambdaContext) {
-	uuid, err := uuid.NewV4()
-	if err != nil {
-		panic(err)
-	}
-	phone := uuid.String()
-	token := CreateUser(phone, "male", lc)
-	CreateUser(phone, "male", lc)
+	token := CreateUser("female", lc)
+	apimodel.Logout(token, true, lc)
 	actions := []apimodel.Action{apimodel.Action{
 		ActionType:    likeActionType,
 		SourceFeed:    newFacesSourceFeed,
@@ -61,7 +55,7 @@ func ActionsWithOldAccessToken(lc *lambdacontext.LambdaContext) {
 }
 
 func ActionsWithNilActions(lc *lambdacontext.LambdaContext) {
-	token := CreateUser("", "female", lc)
+	token := CreateUser("female", lc)
 	resp := apimodel.Actions(token, nil, true, lc)
 	if resp.ErrorCode != "WrongParamsClientError" {
 		panic("there is no WrongParamsClientError when call /actions with nil actions")
@@ -69,7 +63,7 @@ func ActionsWithNilActions(lc *lambdacontext.LambdaContext) {
 }
 
 func ActionsWithEmptySourceFeed(lc *lambdacontext.LambdaContext) {
-	token := CreateUser("", "female", lc)
+	token := CreateUser("female", lc)
 	actions := []apimodel.Action{apimodel.Action{
 		ActionType:    likeActionType,
 		TargetPhotoId: "targetPhotoId",
@@ -86,7 +80,7 @@ func ActionsWithEmptySourceFeed(lc *lambdacontext.LambdaContext) {
 }
 
 func ActionsWithWrongSourceFeed(lc *lambdacontext.LambdaContext) {
-	token := CreateUser("", "female", lc)
+	token := CreateUser("female", lc)
 	actions := []apimodel.Action{apimodel.Action{
 		SourceFeed:    newFacesSourceFeed + "s",
 		ActionType:    likeActionType,
@@ -104,7 +98,7 @@ func ActionsWithWrongSourceFeed(lc *lambdacontext.LambdaContext) {
 }
 
 func ActionsWithEmptyActionType(lc *lambdacontext.LambdaContext) {
-	token := CreateUser("", "female", lc)
+	token := CreateUser("female", lc)
 	actions := []apimodel.Action{apimodel.Action{
 		SourceFeed:    newFacesSourceFeed,
 		TargetPhotoId: "targetPhotoId",
@@ -121,7 +115,7 @@ func ActionsWithEmptyActionType(lc *lambdacontext.LambdaContext) {
 }
 
 func ActionsWithWrongActionType(lc *lambdacontext.LambdaContext) {
-	token := CreateUser("", "female", lc)
+	token := CreateUser("female", lc)
 	actions := []apimodel.Action{apimodel.Action{
 		SourceFeed:    newFacesSourceFeed,
 		ActionType:    likeActionType + "s",
@@ -139,7 +133,7 @@ func ActionsWithWrongActionType(lc *lambdacontext.LambdaContext) {
 }
 
 func ActionsWithEmptyTargetUserId(lc *lambdacontext.LambdaContext) {
-	token := CreateUser("", "female", lc)
+	token := CreateUser("female", lc)
 	actions := []apimodel.Action{apimodel.Action{
 		SourceFeed:    newFacesSourceFeed,
 		ActionType:    likeActionType,
@@ -156,7 +150,7 @@ func ActionsWithEmptyTargetUserId(lc *lambdacontext.LambdaContext) {
 }
 
 func ActionsWithEmptyTargetPhotoId(lc *lambdacontext.LambdaContext) {
-	token := CreateUser("", "female", lc)
+	token := CreateUser("female", lc)
 	actions := []apimodel.Action{apimodel.Action{
 		SourceFeed:   newFacesSourceFeed,
 		ActionType:   likeActionType,

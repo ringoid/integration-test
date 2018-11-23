@@ -22,13 +22,13 @@ Mappings:
 
   ApiEndpoint:
     Auth:
-      test: "https://cc3fs64abg.execute-api.eu-west-1.amazonaws.com/Prod"
+      test: "https://7jqstd12b9.execute-api.eu-west-1.amazonaws.com/Prod"
     Image:
-      test: "https://puta9o4g5b.execute-api.eu-west-1.amazonaws.com/Prod"
+      test: "https://eu12m6l4fe.execute-api.eu-west-1.amazonaws.com/Prod"
     Actions:
-      test: "https://n9bgou3hqb.execute-api.eu-west-1.amazonaws.com/Prod"
+      test: "https://26s3q4h5q8.execute-api.eu-west-1.amazonaws.com/Prod"
     Feeds:
-      test: "https://ag3euujsh4.execute-api.eu-west-1.amazonaws.com/Prod"
+      test: "https://fp9j9oq9u7.execute-api.eu-west-1.amazonaws.com/Prod"
 
 Parameters:
   Env:
@@ -47,12 +47,6 @@ Globals:
           Variables:
             ENV: !Ref Env
             PAPERTRAIL_LOG_ADDRESS: !FindInMap [LogMap, PapertrailLog, !Ref Env]
-            INTERNAL_START_AUTH_FUNCTION_NAME:
-              Fn::ImportValue:
-                !Join [ "-", [ !Ref Env, InternalStartAuthFunctionExport] ]
-            INTERNAL_COMPLETE_AUTH_FUNCTION_NAME:
-              Fn::ImportValue:
-                !Join [ "-", [ !Ref Env, InternalCompleteAuthFunctionExport] ]
             AUTH_API_ENDPOINT: !FindInMap [ApiEndpoint, Auth, !Ref Env]
             IMAGE_API_ENDPOINT: !FindInMap [ApiEndpoint, Image, !Ref Env]
             ACTIONS_API_ENDPOINT: !FindInMap [ApiEndpoint, Actions, !Ref Env]

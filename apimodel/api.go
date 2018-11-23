@@ -64,14 +64,28 @@ func (resp VerifyResp) GoString() string {
 }
 
 type CreateReq struct {
-	WarmUpRequest bool   `json:"warmUpRequest"`
-	AccessToken   string `json:"accessToken"`
-	YearOfBirth   int    `json:"yearOfBirth"`
-	Sex           string `json:"sex"`
+	WarmUpRequest              bool   `json:"warmUpRequest"`
+	YearOfBirth                int    `json:"yearOfBirth"`
+	Sex                        string `json:"sex"`
+	Locale                     string `json:"locale"`
+	DateTimeTermsAndConditions int64  `json:"dtTC"`
+	DateTimePrivacyNotes       int64  `json:"dtPN"`
+	DateTimeLegalAge           int64  `json:"dtLA"`
+	DeviceModel                string `json:"deviceModel"`
+	OsVersion                  string `json:"osVersion"`
 }
 
 func (req CreateReq) String() string {
 	return fmt.Sprintf("%#v", req)
+}
+
+type CreateResp struct {
+	BaseResponse
+	AccessToken string `json:"accessToken"`
+}
+
+func (resp CreateResp) String() string {
+	return fmt.Sprintf("%#v", resp)
 }
 
 type InternalGetUserIdReq struct {
