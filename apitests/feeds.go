@@ -15,7 +15,7 @@ func GetNewFacesWithOldBuildNum(lc *lambdacontext.LambdaContext) {
 
 func GetNewFacesWithOldAccessToken(lc *lambdacontext.LambdaContext) {
 	token := CreateUser("male", lc)
-	apimodel.Logout(token, true, lc)
+	DeleteUser(token, lc)
 	resp := apimodel.GetNewFaces(token, apimodel.PhotoResolution480x640, true, lc)
 	if resp.ErrorCode != "InvalidAccessTokenClientError" {
 		panic("there is no InvalidAccessTokenClientError when call /get_new_faces with old build num")

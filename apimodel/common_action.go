@@ -157,6 +157,31 @@ func CreateUserProfile(yearOfBirth int, sex string, useValidBuildNum bool, lc *l
 	return response
 }
 
+func DeleteUserProfile(accessToken string, useValidBuildNum bool, lc *lambdacontext.LambdaContext) BaseResponse {
+	Anlogger.Debugf(lc, "common_action.go : delete user profile, use valid build num [%d], accessToken [%s]",
+		useValidBuildNum, accessToken)
+
+	request := DeleteReq{
+		AccessToken: accessToken,
+	}
+
+	jsonBody, err := json.Marshal(request)
+	if err != nil {
+		panic(err)
+	}
+
+	respBody := makePostRequest(authApiEndpoint, jsonBody, "/delete", useValidBuildNum)
+
+	response := BaseResponse{}
+	err = json.Unmarshal(respBody, &response)
+	if err != nil {
+		panic(err)
+	}
+
+	Anlogger.Infof(lc, "common_action.go : successfully call delete user profile, return response %v", response)
+	return response
+}
+
 func UpdateUserSettings(accessToken string, safeDistanceInMeter int, pushMessages, pushMatches bool,
 	pushLikes string, useValidBuildNum bool, lc *lambdacontext.LambdaContext) BaseResponse {
 	Anlogger.Debugf(lc, "common_action.go : update user's settings, token [%s], safeDistanceInMeter [%d], "+
@@ -187,36 +212,13 @@ func UpdateUserSettings(accessToken string, safeDistanceInMeter int, pushMessage
 	return response
 }
 
-func Logout(accessToken string, useValidBuildNum bool, lc *lambdacontext.LambdaContext) BaseResponse {
-	Anlogger.Debugf(lc, "common_action.go : logout, token [%s], useValidBuildNum [%v]", accessToken, useValidBuildNum)
-	request := LogoutReq{
-		AccessToken: accessToken,
-	}
-
-	jsonBody, err := json.Marshal(request)
-	if err != nil {
-		panic(err)
-	}
-
-	respBody := makePostRequest(authApiEndpoint, jsonBody, "/logout", useValidBuildNum)
-
-	response := BaseResponse{}
-	err = json.Unmarshal(respBody, &response)
-	if err != nil {
-		panic(err)
-	}
-
-	Anlogger.Infof(lc, "comon_action.go : successfully call logout, return response %v", response)
-	return response
-}
-
-func GetUserSettings(accessToken string, useValidBuildNum bool, lc *lambdacontext.LambdaContext) BaseResponse {
+func GetUserSettings(accessToken string, useValidBuildNum bool, lc *lambdacontext.LambdaContext) GetSettingsResp {
 	Anlogger.Debugf(lc, "common_action.go : get user's settings, token [%s], useValidBuildNum [%v]", accessToken, useValidBuildNum)
 
 	params := make(map[string]string)
 	params["accessToken"] = accessToken
 	respBody := makeGetRequest(authApiEndpoint, params, "/get_settings", useValidBuildNum)
-	response := BaseResponse{}
+	response := GetSettingsResp{}
 	err := json.Unmarshal(respBody, &response)
 	if err != nil {
 		panic(err)

@@ -23,6 +23,14 @@ func handler(ctx context.Context) error {
 	apitests.UpdateSettingsWithWrongDistance(lc)
 	apitests.UpdateSettingsWithWrongPushLikes(lc)
 
+	apitests.GetSettingsWithOldBuildNum(lc)
+	apitests.GetSettingsWithOldToken(lc)
+
+	apitests.DeleteUserProfileWithOldBuildNum(lc)
+	apitests.DeleteUserProfileWithWrongAccessToken(lc)
+
+	apitests.AuthTest(lc)
+
 	apimodel.CleanAllDB(lc)
 
 	apimodel.Anlogger.Infof(lc, "test_auth.go : successfully end auth service integration test")

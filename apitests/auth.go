@@ -28,6 +28,40 @@ func CreateUserProfileWithWrongSex(lc *lambdacontext.LambdaContext) {
 	}
 }
 
+func DeleteUserProfileWithOldBuildNum(lc *lambdacontext.LambdaContext) {
+	token := CreateUser("female", lc)
+	resp := apimodel.DeleteUserProfile(token, false, lc)
+	if resp.ErrorCode != "TooOldAppVersionClientError" {
+		panic("there is no TooOldAppVersionClientError when call /delete with old build num")
+	}
+}
+
+func DeleteUserProfileWithWrongAccessToken(lc *lambdacontext.LambdaContext) {
+	token := CreateUser("male", lc)
+	DeleteUser(token, lc)
+	resp := apimodel.DeleteUserProfile(token, true, lc)
+	if resp.ErrorCode != "InvalidAccessTokenClientError" {
+		panic("there is no InvalidAccessTokenClientError when call /delete with old token")
+	}
+}
+
+func GetSettingsWithOldBuildNum(lc *lambdacontext.LambdaContext) {
+	token := CreateUser("male", lc)
+	resp := apimodel.GetUserSettings(token, false, lc)
+	if resp.ErrorCode != "TooOldAppVersionClientError" {
+		panic("there is no TooOldAppVersionClientError when call /get_settings with old build num")
+	}
+}
+
+func GetSettingsWithOldToken(lc *lambdacontext.LambdaContext) {
+	token := CreateUser("male", lc)
+	DeleteUser(token, lc)
+	resp := apimodel.GetUserSettings(token, true, lc)
+	if resp.ErrorCode != "InvalidAccessTokenClientError" {
+		panic("there is no InvalidAccessTokenClientError when call /get_settings with old token")
+	}
+}
+
 func UpdateSettingsWithOldBuildNum(lc *lambdacontext.LambdaContext) {
 	token := CreateUser("female", lc)
 	resp := apimodel.UpdateUserSettings(token, 10, true, true, "EVERY", false, lc)
@@ -38,7 +72,7 @@ func UpdateSettingsWithOldBuildNum(lc *lambdacontext.LambdaContext) {
 
 func UpdateSettingsWithOldToken(lc *lambdacontext.LambdaContext) {
 	token := CreateUser("female", lc)
-	apimodel.Logout(token, true, lc)
+	DeleteUser(token, lc)
 	resp := apimodel.UpdateUserSettings(token, 10, true, true, "EVERY", true, lc)
 	if resp.ErrorCode != "InvalidAccessTokenClientError" {
 		panic("there is no InvalidAccessTokenClientError when call /update_settings with old token")
@@ -67,7 +101,66 @@ func CreateUser(sex string, lc *lambdacontext.LambdaContext) string {
 		panic(fmt.Sprintf("error create user profile, error code %s", baseResp.ErrorCode))
 	}
 
-	apimodel.Anlogger.Debugf(lc, "test_auth.go : successfully create user")
+	apimodel.Anlogger.Debugf(lc, "auth.go : successfully create user")
 
 	return baseResp.AccessToken
+}
+
+func DeleteUser(token string, lc *lambdacontext.LambdaContext) {
+	baseResp := apimodel.DeleteUserProfile(token, true, lc)
+	if len(baseResp.ErrorCode) != 0 {
+		panic(fmt.Sprintf("error delete user profile, error code %s", baseResp.ErrorCode))
+	}
+
+	apimodel.Anlogger.Debugf(lc, "auth.go : successfully delete user")
+}
+
+func AuthTest(lc *lambdacontext.LambdaContext) {
+	token := CreateUser("male", lc)
+	getSettingResp := apimodel.GetUserSettings(token, true, lc)
+	if len(getSettingResp.ErrorCode) != 0 {
+		panic(fmt.Sprintf("error when call /get_settings, token [%s], error code %s",
+			token, getSettingResp.ErrorCode))
+	}
+
+	if getSettingResp.SafeDistanceInMeter != 0 ||
+		getSettingResp.PushLikes != "EVERY" ||
+		!getSettingResp.PushMessages ||
+		!getSettingResp.PushMatches {
+		panic(fmt.Sprintf("error with default setting for men, resp %v", getSettingResp))
+	}
+
+	updateSetResp := apimodel.UpdateUserSettings(token, 100, false, false, "10_NEW", true, lc)
+	if len(updateSetResp.ErrorCode) != 0 {
+		panic(fmt.Sprintf("error when call /update_settings, token [%s], error code %s",
+			token, updateSetResp.ErrorCode))
+	}
+
+	getSettingResp = apimodel.GetUserSettings(token, true, lc)
+	if len(getSettingResp.ErrorCode) != 0 {
+		panic(fmt.Sprintf("error when call /get_settings, token [%s], error code %s",
+			token, getSettingResp.ErrorCode))
+	}
+
+	if getSettingResp.SafeDistanceInMeter != 100 ||
+		getSettingResp.PushLikes != "10_NEW" ||
+		getSettingResp.PushMessages ||
+		getSettingResp.PushMatches {
+		panic(fmt.Sprintf("error after update settings, resp %v", getSettingResp))
+	}
+
+	//test for women
+	token = CreateUser("female", lc)
+	getSettingResp = apimodel.GetUserSettings(token, true, lc)
+	if len(getSettingResp.ErrorCode) != 0 {
+		panic(fmt.Sprintf("error when call /get_settings, token [%s], error code %s",
+			token, getSettingResp.ErrorCode))
+	}
+
+	if getSettingResp.SafeDistanceInMeter != 25 ||
+		getSettingResp.PushLikes != "10_NEW" ||
+		getSettingResp.PushMessages ||
+		!getSettingResp.PushMatches {
+		panic(fmt.Sprintf("error with default setting for women, resp %v", getSettingResp))
+	}
 }

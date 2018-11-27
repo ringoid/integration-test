@@ -15,54 +15,6 @@ func (req CreateUsersRequest) String() string {
 }
 
 //Request - Response model
-type AuthResp struct {
-	BaseResponse
-	SessionId  string `json:"sessionId"`
-	CustomerId string `json:"customerId"`
-}
-
-func (resp AuthResp) String() string {
-	return fmt.Sprintf("%#v", resp)
-}
-
-type StartReq struct {
-	WarmUpRequest              bool   `json:"warmUpRequest"`
-	CountryCallingCode         int    `json:"countryCallingCode"`
-	Phone                      string `json:"phone"`
-	ClientValidationFail       bool   `json:"clientValidationFail"`
-	Locale                     string `json:"locale"`
-	DateTimeTermsAndConditions int64  `json:"dtTC"`
-	DateTimePrivacyNotes       int64  `json:"dtPN"`
-	DateTimeLegalAge           int64  `json:"dtLA"`
-	DeviceModel                string `json:"deviceModel"`
-	OsVersion                  string `json:"osVersion"`
-	Android                    bool   `json:"android"`
-}
-
-func (req StartReq) String() string {
-	return fmt.Sprintf("%#v", req)
-}
-
-type VerifyReq struct {
-	WarmUpRequest    bool   `json:"warmUpRequest"`
-	SessionId        string `json:"sessionId"`
-	VerificationCode string `json:"verificationCode"`
-}
-
-func (req VerifyReq) String() string {
-	return fmt.Sprintf("%#v", req)
-}
-
-type VerifyResp struct {
-	BaseResponse
-	AccessToken         string `json:"accessToken"`
-	AccountAlreadyExist bool   `json:"accountAlreadyExist"`
-}
-
-func (resp VerifyResp) GoString() string {
-	return fmt.Sprintf("%#v", resp)
-}
-
 type CreateReq struct {
 	WarmUpRequest              bool   `json:"warmUpRequest"`
 	YearOfBirth                int    `json:"yearOfBirth"`
@@ -124,7 +76,7 @@ func (req UpdateSettingsReq) String() string {
 
 type GetSettingsResp struct {
 	BaseResponse
-	SafeDistanceInMeter int    `json:"safeDistanceInMeter"` // 0 (default for men) || 10 (default for women)
+	SafeDistanceInMeter int    `json:"safeDistanceInMeter"` // 0 (default for men) || 25 (default for women)
 	PushMessages        bool   `json:"pushMessages"`        // true (default for men) || false (default for women)
 	PushMatches         bool   `json:"pushMatches"`         // true (default)
 	PushLikes           string `json:"pushLikes"`           //EVERY (default for men) || 10_NEW (default for women) || 100_NEW || NONE
@@ -134,12 +86,12 @@ func (resp GetSettingsResp) String() string {
 	return fmt.Sprintf("%#v", resp)
 }
 
-type LogoutReq struct {
+type DeleteReq struct {
 	WarmUpRequest bool   `json:"warmUpRequest"`
 	AccessToken   string `json:"accessToken"`
 }
 
-func (req LogoutReq) String() string {
+func (req DeleteReq) String() string {
 	return fmt.Sprintf("%#v", req)
 }
 

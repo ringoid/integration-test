@@ -37,7 +37,7 @@ func ActionsWithOldBuildNum(lc *lambdacontext.LambdaContext) {
 
 func ActionsWithOldAccessToken(lc *lambdacontext.LambdaContext) {
 	token := CreateUser("female", lc)
-	apimodel.Logout(token, true, lc)
+	DeleteUser(token, lc)
 	actions := []apimodel.Action{apimodel.Action{
 		ActionType:    likeActionType,
 		SourceFeed:    newFacesSourceFeed,

@@ -18,7 +18,7 @@ func GetPresignWithOldBuildNumTest(lc *lambdacontext.LambdaContext) {
 
 func GetPresignWithOldAccessTokenTest(lc *lambdacontext.LambdaContext) {
 	token := CreateUser("male", lc)
-	apimodel.Logout(token, true, lc)
+	DeleteUser(token, lc)
 	getPresignResp := apimodel.GetPresignUrl(token, true, lc)
 	if getPresignResp.ErrorCode != "InvalidAccessTokenClientError" {
 		panic("there is no InvalidAccessTokenClientError when call /get_presigned with old token")
@@ -35,7 +35,7 @@ func GetOwnPhotosWithOldBuildNum(lc *lambdacontext.LambdaContext) {
 
 func GetOwnPhotosWithOldToken(lc *lambdacontext.LambdaContext) {
 	token := CreateUser("male", lc)
-	apimodel.Logout(token, true, lc)
+	DeleteUser(token, lc)
 	getOwnPhotoResp := apimodel.GetOwnPhotos(token, apimodel.PhotoResolution480x640, true, lc)
 	if getOwnPhotoResp.ErrorCode != "InvalidAccessTokenClientError" {
 		panic("there is no InvalidAccessTokenClientError when call /get_own_photos with old token")
@@ -68,7 +68,7 @@ func DeletePhotoWithOldAccessToken(lc *lambdacontext.LambdaContext) {
 		panic(err)
 	}
 	token := CreateUser("male", lc)
-	apimodel.Logout(token, true, lc)
+	DeleteUser(token, lc)
 	resp := apimodel.DeletePhoto(token, uuid.String(), true, lc)
 	if resp.ErrorCode != "InvalidAccessTokenClientError" {
 		panic("there is no InvalidAccessTokenClientError when call /delete_photo with old build num")
