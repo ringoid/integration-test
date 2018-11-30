@@ -17,6 +17,9 @@ func handler(ctx context.Context) error {
 	apitests.GetNewFacesWithOldBuildNum(lc)
 	apitests.GetNewFacesWithOldAccessToken(lc)
 	apitests.GetNewFacesWithWrongResolution(lc)
+	apitests.GetLMMWithOldBuildNum(lc)
+	apitests.GetLMMWithOldAccessToken(lc)
+	apitests.GetLMMWithWrongResolution(lc)
 
 	apimodel.CleanAllDB(lc)
 

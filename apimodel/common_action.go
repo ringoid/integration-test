@@ -13,9 +13,11 @@ import (
 	"bytes"
 	"io/ioutil"
 	"strings"
+	"strconv"
+	"github.com/ringoid/commons"
 )
 
-var Anlogger *Logger
+var Anlogger *commons.Logger
 
 var clientLambda *lambda.Lambda
 var authApiEndpoint string
@@ -25,6 +27,7 @@ var feedsApiEndpoint string
 var cleanAuthDbFunctionName string
 var cleanImageDbFunctionName string
 var cleanRelationshipsDbFunctionName string
+var secretWord string
 
 func init() {
 	var env string
@@ -47,7 +50,7 @@ func init() {
 	}
 	fmt.Printf("lambda-initialization : common_action.go : start with PAPERTRAIL_LOG_ADDRESS = [%s]\n", papertrailAddress)
 
-	Anlogger, err = NewLogger(papertrailAddress, fmt.Sprintf("%s-%s", env, "integration-test"))
+	Anlogger, err = commons.New(papertrailAddress, fmt.Sprintf("%s-%s", env, "integration-test"))
 	if err != nil {
 		fmt.Errorf("lambda-initialization : common_action.go : error during startup : %v\n", err)
 		os.Exit(1)
@@ -106,6 +109,8 @@ func init() {
 
 	clientLambda = lambda.New(awsSession)
 	Anlogger.Debugf(nil, "lambda-initialization : common_action.go : lambda client was successfully initialized")
+
+	secretWord = commons.GetSecret(fmt.Sprintf(commons.SecretWordKeyBase, env), commons.SecretWordKeyName, awsSession, Anlogger, nil)
 }
 
 func CleanAllDB(lc *lambdacontext.LambdaContext) {
@@ -458,4 +463,30 @@ func GetNewFaces(accessToken, resolution string, useValidBuildNum bool, lc *lamb
 
 	Anlogger.Infof(lc, "common_action.go : successfully call new faces, response %v", response)
 	return response
+}
+
+func GetLMM(accessToken, resolution string, lastActionTime int, useValidBuildNum bool, lc *lambdacontext.LambdaContext) LMMFeedResp {
+	Anlogger.Debugf(lc, "common_action.go : llm, token [%s], resolution [%s], lastActionTime [%d], use valid build num [%v]",
+		accessToken, resolution, lastActionTime, useValidBuildNum)
+	params := make(map[string]string)
+	params["accessToken"] = accessToken
+	params["resolution"] = resolution
+	params["lastActionTime"] = strconv.Itoa(lastActionTime)
+	respBody := makeGetRequest(feedsApiEndpoint, params, "/get_lmm", useValidBuildNum)
+	response := LMMFeedResp{}
+	err := json.Unmarshal(respBody, &response)
+	if err != nil {
+		panic(err)
+	}
+
+	Anlogger.Infof(lc, "common_action.go : successfully call llm, response %v", response)
+	return response
+}
+
+func UserId(token string, lc *lambdacontext.LambdaContext) string {
+	userId, _, ok, errorStr := commons.DecodeToken(token, secretWord, Anlogger, lc)
+	if !ok {
+		panic(fmt.Sprintf("could not decode token : %s", errorStr))
+	}
+	return userId
 }

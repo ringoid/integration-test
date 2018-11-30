@@ -19,6 +19,8 @@ Mappings:
       test: test-actions-service-integration-test
     AuthServiceTestFunction:
       test: test-auth-service-integration-test
+    ComplexTestFunction:
+      test: test-complex-integration-test
 
   ApiEndpoint:
     Auth:
@@ -117,3 +119,14 @@ Resources:
       Description: Auth service (integration tests)
       Policies:
         - AWSLambdaFullAccess
+
+  ComplexTestFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !FindInMap [FunctionName, ComplexTestFunction, !Ref Env]
+      Handler: test_complex
+      CodeUri: ./test_complex.zip
+      Description: Complex (integration tests)
+      Policies:
+        - AWSLambdaFullAccess
+        - SecretsManagerReadWrite

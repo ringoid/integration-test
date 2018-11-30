@@ -40,3 +40,15 @@ var PhotoResolution480x640 = "480x640"
 var PhotoResolution720x960 = "720x960"
 var PhotoResolution1080x1440 = "1080x1440"
 var PhotoResolution1440x1920 = "1440x1920"
+
+const (
+	NewFacesSourceFeed   = "new_faces"
+	WhoLikedMeSourceFeed = "who_liked_me"
+	MatchesSourceFeed    = "matches"
+	MessagesSourceFeed   = "messages"
+
+	ViewActionType   = "VIEW"
+	LikeActionType   = "LIKE"
+	UnlikeActionType = "UNLIKE"
+	BlockActionType  = "BLOCK"
+)

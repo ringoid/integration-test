@@ -225,3 +225,14 @@ type Action struct {
 func (req Action) String() string {
 	return fmt.Sprintf("%#v", req)
 }
+
+type LMMFeedResp struct {
+	BaseResponse
+	LikesYouNewProfiles   []Profile `json:"likesYouNewProfiles"`
+	LikesYouOldProfiles   []Profile `json:"likesYouOldProfiles"`
+	RepeatRequestAfterSec int       `json:"repeatRequestAfterSec"`
+}
+
+func (resp LMMFeedResp) String() string {
+	return fmt.Sprintf("%#v", resp)
+}

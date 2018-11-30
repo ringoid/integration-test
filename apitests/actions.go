@@ -5,23 +5,11 @@ import (
 	"../apimodel"
 )
 
-const (
-	newFacesSourceFeed   = "new_faces"
-	whoLikedMeSourceFeed = "who_liked_me"
-	matchesSourceFeed    = "matches"
-	messagesSourceFeed   = "messages"
-
-	viewActionType   = "VIEW"
-	likeActionType   = "LIKE"
-	unlikeActionType = "UNLIKE"
-	blockActionType  = "BLOCK"
-)
-
 func ActionsWithOldBuildNum(lc *lambdacontext.LambdaContext) {
 	token := CreateUser("female", lc)
 	actions := []apimodel.Action{apimodel.Action{
-		ActionType:    likeActionType,
-		SourceFeed:    newFacesSourceFeed,
+		ActionType:    apimodel.LikeActionType,
+		SourceFeed:    apimodel.NewFacesSourceFeed,
 		TargetPhotoId: "targetPhotoId",
 		TargetUserId:  "targetUserId",
 		LikeCount:     1,
@@ -39,8 +27,8 @@ func ActionsWithOldAccessToken(lc *lambdacontext.LambdaContext) {
 	token := CreateUser("female", lc)
 	DeleteUser(token, lc)
 	actions := []apimodel.Action{apimodel.Action{
-		ActionType:    likeActionType,
-		SourceFeed:    newFacesSourceFeed,
+		ActionType:    apimodel.LikeActionType,
+		SourceFeed:    apimodel.NewFacesSourceFeed,
 		TargetPhotoId: "targetPhotoId",
 		TargetUserId:  "targetUserId",
 		LikeCount:     1,
@@ -65,7 +53,7 @@ func ActionsWithNilActions(lc *lambdacontext.LambdaContext) {
 func ActionsWithEmptySourceFeed(lc *lambdacontext.LambdaContext) {
 	token := CreateUser("female", lc)
 	actions := []apimodel.Action{apimodel.Action{
-		ActionType:    likeActionType,
+		ActionType:    apimodel.LikeActionType,
 		TargetPhotoId: "targetPhotoId",
 		TargetUserId:  "targetUserId",
 		LikeCount:     1,
@@ -82,8 +70,8 @@ func ActionsWithEmptySourceFeed(lc *lambdacontext.LambdaContext) {
 func ActionsWithWrongSourceFeed(lc *lambdacontext.LambdaContext) {
 	token := CreateUser("female", lc)
 	actions := []apimodel.Action{apimodel.Action{
-		SourceFeed:    newFacesSourceFeed + "s",
-		ActionType:    likeActionType,
+		SourceFeed:    apimodel.NewFacesSourceFeed + "s",
+		ActionType:    apimodel.LikeActionType,
 		TargetPhotoId: "targetPhotoId",
 		TargetUserId:  "targetUserId",
 		LikeCount:     1,
@@ -100,7 +88,7 @@ func ActionsWithWrongSourceFeed(lc *lambdacontext.LambdaContext) {
 func ActionsWithEmptyActionType(lc *lambdacontext.LambdaContext) {
 	token := CreateUser("female", lc)
 	actions := []apimodel.Action{apimodel.Action{
-		SourceFeed:    newFacesSourceFeed,
+		SourceFeed:    apimodel.NewFacesSourceFeed,
 		TargetPhotoId: "targetPhotoId",
 		TargetUserId:  "targetUserId",
 		LikeCount:     1,
@@ -117,8 +105,8 @@ func ActionsWithEmptyActionType(lc *lambdacontext.LambdaContext) {
 func ActionsWithWrongActionType(lc *lambdacontext.LambdaContext) {
 	token := CreateUser("female", lc)
 	actions := []apimodel.Action{apimodel.Action{
-		SourceFeed:    newFacesSourceFeed,
-		ActionType:    likeActionType + "s",
+		SourceFeed:    apimodel.NewFacesSourceFeed,
+		ActionType:    apimodel.LikeActionType + "s",
 		TargetPhotoId: "targetPhotoId",
 		TargetUserId:  "targetUserId",
 		LikeCount:     1,
@@ -135,8 +123,8 @@ func ActionsWithWrongActionType(lc *lambdacontext.LambdaContext) {
 func ActionsWithEmptyTargetUserId(lc *lambdacontext.LambdaContext) {
 	token := CreateUser("female", lc)
 	actions := []apimodel.Action{apimodel.Action{
-		SourceFeed:    newFacesSourceFeed,
-		ActionType:    likeActionType,
+		SourceFeed:    apimodel.NewFacesSourceFeed,
+		ActionType:    apimodel.LikeActionType,
 		TargetPhotoId: "targetPhotoId",
 		LikeCount:     1,
 		ViewCount:     1,
@@ -152,8 +140,8 @@ func ActionsWithEmptyTargetUserId(lc *lambdacontext.LambdaContext) {
 func ActionsWithEmptyTargetPhotoId(lc *lambdacontext.LambdaContext) {
 	token := CreateUser("female", lc)
 	actions := []apimodel.Action{apimodel.Action{
-		SourceFeed:   newFacesSourceFeed,
-		ActionType:   likeActionType,
+		SourceFeed:   apimodel.NewFacesSourceFeed,
+		ActionType:   apimodel.LikeActionType,
 		TargetUserId: "targetUserId",
 		LikeCount:    1,
 		ViewCount:    1,
