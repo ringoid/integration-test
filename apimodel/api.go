@@ -230,6 +230,8 @@ type LMMFeedResp struct {
 	BaseResponse
 	LikesYouNewProfiles   []Profile `json:"likesYouNewProfiles"`
 	LikesYouOldProfiles   []Profile `json:"likesYouOldProfiles"`
+	MatchesNewProfiles    []Profile `json:"matchesNewProfiles"`
+	MatchesOldProfiles    []Profile `json:"matchesOldProfiles"`
 	RepeatRequestAfterSec int       `json:"repeatRequestAfterSec"`
 }
 
