@@ -79,6 +79,7 @@ Resources:
       Description: Generate users function (integration tests)
       Policies:
         - AWSLambdaFullAccess
+        - SecretsManagerReadWrite
 
   ImageServiceTestFunction:
     Type: AWS::Serverless::Function
@@ -89,6 +90,7 @@ Resources:
       Description: Image service (integration tests)
       Policies:
         - AWSLambdaFullAccess
+        - SecretsManagerReadWrite
 
   FeedsServiceTestFunction:
     Type: AWS::Serverless::Function
@@ -99,6 +101,7 @@ Resources:
       Description: Feeds service (integration tests)
       Policies:
         - AWSLambdaFullAccess
+        - SecretsManagerReadWrite
 
   ActionsServiceTestFunction:
     Type: AWS::Serverless::Function
@@ -109,6 +112,7 @@ Resources:
       Description: Actions service (integration tests)
       Policies:
         - AWSLambdaFullAccess
+        - SecretsManagerReadWrite
 
   AuthServiceTestFunction:
     Type: AWS::Serverless::Function
@@ -119,6 +123,7 @@ Resources:
       Description: Auth service (integration tests)
       Policies:
         - AWSLambdaFullAccess
+        - SecretsManagerReadWrite
 
   ComplexTestFunction:
     Type: AWS::Serverless::Function
