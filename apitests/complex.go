@@ -670,9 +670,29 @@ func secondPhaseLikesYouTest(sourceUserId, sourceToke, sp1, sp2, sp3 string, fir
 		panic("secondPhaseLikesYouTest : complex test, firstPhaseResult.len != photoActualOrderOldPart.len")
 	}
 
-	for index, item := range firstPhaseResult {
-		if photoActualOrderOldPart[index] != item.PhotoId {
-			panic("secondPhaseLikesYouTest : complex test, wrong orde of old items")
+	photoPredictedOrderOldPart := make([]string, 0)
+
+	for _, item := range firstPhaseResult {
+		photoPredictedOrderOldPart = append(photoPredictedOrderOldPart, item.PhotoId)
+	}
+
+	//тут играет то, что после того как я посмотрел фотки в LIKES_YOU
+	//у них изменился порядок сортировки (условия смотрел их source теперь у всех = 1,
+	//и решает теперь время загрузки фото.
+	finalPhotoPredictOrderOldPart := make([]string, 0)
+	finalPhotoPredictOrderOldPart = append(finalPhotoPredictOrderOldPart, photoPredictedOrderOldPart[2])
+	finalPhotoPredictOrderOldPart = append(finalPhotoPredictOrderOldPart, photoPredictedOrderOldPart[0])
+	finalPhotoPredictOrderOldPart = append(finalPhotoPredictOrderOldPart, photoPredictedOrderOldPart[1])
+	finalPhotoPredictOrderOldPart = append(finalPhotoPredictOrderOldPart, photoPredictedOrderOldPart[3:]...)
+
+	apimodel.Anlogger.Debugf(lc, "secondPhaseLikesYouTest : source userId %s", sourceUserId)
+	apimodel.Anlogger.Debugf(lc, "secondPhaseLikesYouTest : predict order %v", photoPredictedOrderOldPart)
+	apimodel.Anlogger.Debugf(lc, "secondPhaseLikesYouTest :  actual order %v", photoActualOrderOldPart)
+	apimodel.Anlogger.Debugf(lc, "secondPhaseLikesYouTest :  final predict order %v", finalPhotoPredictOrderOldPart)
+
+	for index, _ := range finalPhotoPredictOrderOldPart {
+		if photoActualOrderOldPart[index] != finalPhotoPredictOrderOldPart[index] {
+			panic("secondPhaseLikesYouTest : complex test, wrong order of old items")
 		}
 	}
 
@@ -1635,12 +1655,32 @@ func secondPhaseMatchesYouTest(sourceUserId, sourceToke, sp1, sp2, sp3 string, f
 		}
 	}
 
+	photoPredictedOrderOldPart := make([]string, 0)
+
+	for _, item := range firstPhaseResult {
+		photoPredictedOrderOldPart = append(photoPredictedOrderOldPart, item.PhotoId)
+	}
+
+	//тут играет то, что после того как я посмотрел фотки в MATCHES_YOU
+	//у них изменился порядок сортировки (условия смотрел их source теперь у конкурирующих = 1,
+	//и решает теперь время сколько лайков у каждой.
+	finalPhotoPredictOrderOldPart := make([]string, 0)
+	finalPhotoPredictOrderOldPart = append(finalPhotoPredictOrderOldPart, photoPredictedOrderOldPart[0:4]...)
+	finalPhotoPredictOrderOldPart = append(finalPhotoPredictOrderOldPart, photoPredictedOrderOldPart[5])
+	finalPhotoPredictOrderOldPart = append(finalPhotoPredictOrderOldPart, photoPredictedOrderOldPart[4])
+	finalPhotoPredictOrderOldPart = append(finalPhotoPredictOrderOldPart, photoPredictedOrderOldPart[6:]...)
+
+	apimodel.Anlogger.Debugf(lc, "secondPhaseMatchesYouTest : source userId %s", sourceUserId)
+	apimodel.Anlogger.Debugf(lc, "secondPhaseMatchesYouTest : predict order %v", photoPredictedOrderOldPart)
+	apimodel.Anlogger.Debugf(lc, "secondPhaseMatchesYouTest :  actual order %v", photoActualOrderOldPart)
+	apimodel.Anlogger.Debugf(lc, "secondPhaseMatchesYouTest :  final predict order %v", finalPhotoPredictOrderOldPart)
+
 	if len(firstPhaseResult) != len(photoActualOrderOldPart) {
 		panic(fmt.Sprintf("secondPhaseMatchesYouTest : complex test, firstPhaseResult.len != photoActualOrderOldPart.len, [%d] and [%d]", len(firstPhaseResult), len(photoActualOrderOldPart)))
 	}
 
-	for index, item := range firstPhaseResult {
-		if photoActualOrderOldPart[index] != item.PhotoId {
+	for index, _ := range finalPhotoPredictOrderOldPart {
+		if photoActualOrderOldPart[index] != finalPhotoPredictOrderOldPart[index] {
 			panic("secondPhaseMatchesYouTest : complex test, wrong orde of old items")
 		}
 	}
