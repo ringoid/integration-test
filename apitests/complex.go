@@ -297,8 +297,15 @@ func firstPhaseLikesYouTest(lc *lambdacontext.LambdaContext) (string, string, st
 
 	photoReqiredOrder := []string{t2p1, t2p3, t2p2, t1p3, t1p2, t1p1, t1p4}
 
+	//check that all profiles have unseen flag
+	for _, each := range resp.LikesYou {
+		if !each.Unseen {
+			panic("firstPhaseLikesYouTest : complex test, new likes you have wrong unseen flag")
+		}
+	}
+
 	photoActualOrder := make([]string, 0)
-	for _, each := range resp.LikesYouNewProfiles {
+	for _, each := range resp.LikesYou {
 		for _, eachP := range each.Photos {
 			photoActualOrder = append(photoActualOrder, eachP.PhotoId)
 		}
@@ -640,15 +647,24 @@ func secondPhaseLikesYouTest(sourceUserId, sourceToke, sp1, sp2, sp3 string, fir
 	}
 
 	photoReqiredOrderNewPart := []string{t2p1, t2p3, t2p2, t1p3, t1p2, t1p1, t1p4}
+	apimodel.Anlogger.Debugf(lc, "secondPhaseLikesYouTest : photoReqiredOrderNewPart.len = %d", len(photoReqiredOrderNewPart))
+	apimodel.Anlogger.Debugf(lc, "secondPhaseLikesYouTest : resp.LikesYou.len = %d", len(resp.LikesYou))
 
-	photoActualOrderNewPart := make([]string, 0)
-	for _, each := range resp.LikesYouNewProfiles {
-		for _, eachP := range each.Photos {
-			photoActualOrderNewPart = append(photoActualOrderNewPart, eachP.PhotoId)
-		}
+	if !resp.LikesYou[0].Unseen || !resp.LikesYou[1].Unseen {
+		panic(fmt.Sprintf("secondPhaseLikesYouTest : wrong unseen flag in first part of likes"))
+	}
+	if resp.LikesYou[2].Unseen || resp.LikesYou[3].Unseen {
+		panic(fmt.Sprintf("secondPhaseLikesYouTest : wrong unseen flag in second part of likes"))
 	}
 
-	if len(photoReqiredOrderNewPart) != len(photoActualOrderNewPart) {
+	photoActualOrderFullResult := make([]string, 0)
+	for _, each := range resp.LikesYou {
+		for _, eachP := range each.Photos {
+			photoActualOrderFullResult = append(photoActualOrderFullResult, eachP.PhotoId)
+		}
+	}
+	photoActualOrderNewPart := photoActualOrderFullResult[:len(photoReqiredOrderNewPart)]
+	if len(photoReqiredOrderNewPart) != len(photoReqiredOrderNewPart) {
 		panic("secondPhaseLikesYouTest : complex test, photoActualOrderNewPart.len != photoReqiredOrderNewPart.len")
 	}
 
@@ -659,13 +675,7 @@ func secondPhaseLikesYouTest(sourceUserId, sourceToke, sp1, sp2, sp3 string, fir
 	}
 
 	//old part
-	photoActualOrderOldPart := make([]string, 0)
-	for _, each := range resp.LikesYouOldProfiles {
-		for _, eachP := range each.Photos {
-			photoActualOrderOldPart = append(photoActualOrderOldPart, eachP.PhotoId)
-		}
-	}
-
+	photoActualOrderOldPart := photoActualOrderFullResult[len(photoReqiredOrderNewPart):]
 	if len(firstPhaseResult) != len(photoActualOrderOldPart) {
 		panic("secondPhaseLikesYouTest : complex test, firstPhaseResult.len != photoActualOrderOldPart.len")
 	}
@@ -1144,8 +1154,14 @@ func firstPhaseMatchesTest(lc *lambdacontext.LambdaContext) (string, string, str
 
 	photoReqiredOrder := []string{t1p3, t1p4, t1p2, t1p1, t2p3, t2p2, t2p1}
 
+	for _, each := range resp.Matches {
+		if !each.Unseen {
+			panic(fmt.Sprintf("firstPhaseMatchesTest : complex test, wrong unseen flag for matches (first part)"))
+		}
+	}
+
 	photoActualOrder := make([]string, 0)
-	for _, each := range resp.MatchesNewProfiles {
+	for _, each := range resp.Matches {
 		for _, eachP := range each.Photos {
 			photoActualOrder = append(photoActualOrder, eachP.PhotoId)
 		}
@@ -1630,13 +1646,21 @@ func secondPhaseMatchesYouTest(sourceUserId, sourceToke, sp1, sp2, sp3 string, f
 
 	photoReqiredOrderNewPart := []string{t1p3, t1p4, t1p2, t1p1, t2p3, t2p2, t2p1}
 
-	photoActualOrderNewPart := make([]string, 0)
-	for _, each := range resp.MatchesNewProfiles {
+	if !resp.Matches[0].Unseen || !resp.Matches[1].Unseen {
+		panic(fmt.Sprintf("secondPhaseMatchesYouTest : wrong unseen flag in first part of matches"))
+	}
+	if resp.Matches[2].Unseen || resp.Matches[3].Unseen {
+		panic(fmt.Sprintf("secondPhaseMatchesYouTest : wrong unseen flag in second part of matches"))
+	}
+
+	photoActualFullOrder := make([]string, 0)
+	for _, each := range resp.Matches {
 		for _, eachP := range each.Photos {
-			photoActualOrderNewPart = append(photoActualOrderNewPart, eachP.PhotoId)
+			photoActualFullOrder = append(photoActualFullOrder, eachP.PhotoId)
 		}
 	}
 
+	photoActualOrderNewPart := photoActualFullOrder[:len(photoReqiredOrderNewPart)]
 	if len(photoReqiredOrderNewPart) != len(photoActualOrderNewPart) {
 		panic("secondPhaseMatchesYouTest : complex test, photoActualOrderNewPart.len != photoReqiredOrderNewPart.len")
 	}
@@ -1648,12 +1672,7 @@ func secondPhaseMatchesYouTest(sourceUserId, sourceToke, sp1, sp2, sp3 string, f
 	}
 
 	//old part
-	photoActualOrderOldPart := make([]string, 0)
-	for _, each := range resp.MatchesOldProfiles {
-		for _, eachP := range each.Photos {
-			photoActualOrderOldPart = append(photoActualOrderOldPart, eachP.PhotoId)
-		}
-	}
+	photoActualOrderOldPart := photoActualFullOrder[len(photoReqiredOrderNewPart):]
 
 	photoPredictedOrderOldPart := make([]string, 0)
 
