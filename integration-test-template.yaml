@@ -24,13 +24,13 @@ Mappings:
 
   ApiEndpoint:
     Auth:
-      test: "https://7jqstd12b9.execute-api.eu-west-1.amazonaws.com/Prod"
+      test: "https://test.ringoidapp.com/auth"
     Image:
-      test: "https://eu12m6l4fe.execute-api.eu-west-1.amazonaws.com/Prod"
+      test: "https://test.ringoidapp.com/image"
     Actions:
-      test: "https://26s3q4h5q8.execute-api.eu-west-1.amazonaws.com/Prod"
+      test: "https://test.ringoidapp.com/actions"
     Feeds:
-      test: "https://fp9j9oq9u7.execute-api.eu-west-1.amazonaws.com/Prod"
+      test: "https://test.ringoidapp.com/feeds"
 
 Parameters:
   Env:

@@ -172,6 +172,52 @@ func firstPhaseLikesYouTest(lc *lambdacontext.LambdaContext) (string, string, st
 	actionsForLiker_1 := []apimodel.Action{
 		apimodel.Action{
 			SourceFeed:    apimodel.NewFacesSourceFeed,
+			ActionType:    apimodel.ViewActionType,
+			TargetPhotoId: t1p1,
+			TargetUserId:  target_1_userId,
+			ViewCount:     1,
+			ViewTimeSec:   10,
+			ActionTime:    int(time.Now().Unix()),
+		},
+		apimodel.Action{
+			SourceFeed:    apimodel.NewFacesSourceFeed,
+			ActionType:    apimodel.ViewActionType,
+			TargetPhotoId: t1p2,
+			TargetUserId:  target_1_userId,
+			ViewCount:     2,
+			ViewTimeSec:   20,
+			ActionTime:    int(time.Now().Unix()),
+		},
+		apimodel.Action{
+			SourceFeed:    apimodel.NewFacesSourceFeed,
+			ActionType:    apimodel.ViewActionType,
+			TargetPhotoId: t1p3,
+			TargetUserId:  target_1_userId,
+			ViewCount:     2,
+			ViewTimeSec:   30,
+			ActionTime:    int(time.Now().Unix()),
+		},
+		apimodel.Action{
+			SourceFeed:    apimodel.NewFacesSourceFeed,
+			ActionType:    apimodel.ViewActionType,
+			TargetPhotoId: t2p1,
+			TargetUserId:  target_2_userId,
+			ViewCount:     1,
+			ViewTimeSec:   10,
+			ActionTime:    int(time.Now().Unix()),
+		},
+		apimodel.Action{
+			SourceFeed:    apimodel.NewFacesSourceFeed,
+			ActionType:    apimodel.ViewActionType,
+			TargetPhotoId: t2p2,
+			TargetUserId:  target_2_userId,
+			ViewCount:     10,
+			ViewTimeSec:   10,
+			ActionTime:    int(time.Now().Unix()),
+		},
+		//////-----------
+		apimodel.Action{
+			SourceFeed:    apimodel.NewFacesSourceFeed,
 			ActionType:    apimodel.LikeActionType,
 			TargetPhotoId: t1p1,
 			TargetUserId:  target_1_userId,
@@ -224,6 +270,34 @@ func firstPhaseLikesYouTest(lc *lambdacontext.LambdaContext) (string, string, st
 	apimodel.Actions(liker_1, actionsForLiker_1, true, lc)
 
 	actionsForLiker_2 := []apimodel.Action{
+		apimodel.Action{
+			SourceFeed:    apimodel.NewFacesSourceFeed,
+			ActionType:    apimodel.ViewActionType,
+			TargetPhotoId: t2p1,
+			TargetUserId:  target_2_userId,
+			ViewCount:     10,
+			ViewTimeSec:   100,
+			ActionTime:    int(time.Now().Unix()),
+		},
+		apimodel.Action{
+			SourceFeed:    apimodel.NewFacesSourceFeed,
+			ActionType:    apimodel.ViewActionType,
+			TargetPhotoId: t2p2,
+			TargetUserId:  target_2_userId,
+			ViewCount:     2,
+			ViewTimeSec:   100,
+			ActionTime:    int(time.Now().Unix()),
+		},
+		apimodel.Action{
+			SourceFeed:    apimodel.NewFacesSourceFeed,
+			ActionType:    apimodel.ViewActionType,
+			TargetPhotoId: t2p3,
+			TargetUserId:  target_2_userId,
+			ViewCount:     10,
+			ViewTimeSec:   100,
+			ActionTime:    int(time.Now().Unix()),
+		},
+		//////
 		apimodel.Action{
 			SourceFeed:    apimodel.NewFacesSourceFeed,
 			ActionType:    apimodel.LikeActionType,
@@ -285,6 +359,7 @@ func firstPhaseLikesYouTest(lc *lambdacontext.LambdaContext) (string, string, st
 	//Now test
 	time.Sleep(2 * time.Second)
 	resp := apimodel.GetLMM(source_token, resolution, 0, true, lc)
+	apimodel.Anlogger.Debugf(lc, "firstPhaseLikesYouTest : source user id %s", source_userId)
 	apimodel.Anlogger.Debugf(lc, "firstPhaseLikesYouTest : feed Resp : %v", resp)
 
 	if len(resp.ErrorCode) != 0 {
@@ -317,6 +392,8 @@ func firstPhaseLikesYouTest(lc *lambdacontext.LambdaContext) (string, string, st
 
 	for index, value := range photoReqiredOrder {
 		if photoActualOrder[index] != value {
+			apimodel.Anlogger.Debugf(lc, "complex.go : requiredOrder %v", photoReqiredOrder)
+			apimodel.Anlogger.Debugf(lc, "complex.go : actualOrder   %v", photoActualOrder)
 			panic("firstPhaseLikesYouTest : complex test, wrong order")
 		}
 	}
@@ -523,6 +600,52 @@ func secondPhaseLikesYouTest(sourceUserId, sourceToke, sp1, sp2, sp3 string, fir
 	actionsForLiker_1 := []apimodel.Action{
 		apimodel.Action{
 			SourceFeed:    apimodel.NewFacesSourceFeed,
+			ActionType:    apimodel.ViewActionType,
+			TargetPhotoId: t1p1,
+			TargetUserId:  target_1_userId,
+			ViewCount:     1,
+			ViewTimeSec:   10,
+			ActionTime:    int(time.Now().Unix()),
+		},
+		apimodel.Action{
+			SourceFeed:    apimodel.NewFacesSourceFeed,
+			ActionType:    apimodel.ViewActionType,
+			TargetPhotoId: t1p2,
+			TargetUserId:  target_1_userId,
+			ViewCount:     1,
+			ViewTimeSec:   10,
+			ActionTime:    int(time.Now().Unix()),
+		},
+		apimodel.Action{
+			SourceFeed:    apimodel.NewFacesSourceFeed,
+			ActionType:    apimodel.ViewActionType,
+			TargetPhotoId: t1p3,
+			TargetUserId:  target_1_userId,
+			ViewCount:     10,
+			ViewTimeSec:   100,
+			ActionTime:    int(time.Now().Unix()),
+		},
+		apimodel.Action{
+			SourceFeed:    apimodel.NewFacesSourceFeed,
+			ActionType:    apimodel.LikeActionType,
+			TargetPhotoId: t2p1,
+			TargetUserId:  target_2_userId,
+			ViewCount:     10,
+			ViewTimeSec:   10,
+			ActionTime:    int(time.Now().Unix()),
+		},
+		apimodel.Action{
+			SourceFeed:    apimodel.NewFacesSourceFeed,
+			ActionType:    apimodel.ViewActionType,
+			TargetPhotoId: t2p2,
+			TargetUserId:  target_2_userId,
+			ViewCount:     1,
+			ViewTimeSec:   100,
+			ActionTime:    int(time.Now().Unix()),
+		},
+		///////
+		apimodel.Action{
+			SourceFeed:    apimodel.NewFacesSourceFeed,
 			ActionType:    apimodel.LikeActionType,
 			TargetPhotoId: t1p1,
 			TargetUserId:  target_1_userId,
@@ -575,6 +698,34 @@ func secondPhaseLikesYouTest(sourceUserId, sourceToke, sp1, sp2, sp3 string, fir
 	apimodel.Actions(liker_1, actionsForLiker_1, true, lc)
 
 	actionsForLiker_2 := []apimodel.Action{
+		apimodel.Action{
+			SourceFeed:    apimodel.NewFacesSourceFeed,
+			ActionType:    apimodel.ViewActionType,
+			TargetPhotoId: t2p1,
+			TargetUserId:  target_2_userId,
+			ViewCount:     10,
+			ViewTimeSec:   100,
+			ActionTime:    int(time.Now().Unix()),
+		},
+		apimodel.Action{
+			SourceFeed:    apimodel.NewFacesSourceFeed,
+			ActionType:    apimodel.ViewActionType,
+			TargetPhotoId: t2p2,
+			TargetUserId:  target_2_userId,
+			ViewCount:     10,
+			ViewTimeSec:   100,
+			ActionTime:    int(time.Now().Unix()),
+		},
+		apimodel.Action{
+			SourceFeed:    apimodel.NewFacesSourceFeed,
+			ActionType:    apimodel.ViewActionType,
+			TargetPhotoId: t2p3,
+			TargetUserId:  target_2_userId,
+			ViewCount:     10,
+			ViewTimeSec:   100,
+			ActionTime:    int(time.Now().Unix()),
+		},
+		/////
 		apimodel.Action{
 			SourceFeed:    apimodel.NewFacesSourceFeed,
 			ActionType:    apimodel.LikeActionType,
