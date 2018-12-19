@@ -1,4 +1,5 @@
 test-all: clean test-deploy
+stage-all: clean stage-deploy
 
 build:
 	@echo '--- Building generate-users-integration-test function ---'
@@ -34,6 +35,13 @@ test-deploy: zip_lambda
 	sam package --template-file integration-test-template.yaml --s3-bucket ringoid-cloudformation-template --output-template-file integration-test-template-packaged.yaml
 	@echo 'Deploy test-integration-test-stack'
 	sam deploy --template-file integration-test-template-packaged.yaml --s3-bucket ringoid-cloudformation-template --stack-name test-integration-test-stack --capabilities CAPABILITY_IAM --parameter-overrides Env=test --no-fail-on-empty-changeset
+
+stage-deploy: zip_lambda
+	@echo '--- Build lambda stage ---'
+	@echo 'Package template'
+	sam package --template-file integration-test-template.yaml --s3-bucket ringoid-cloudformation-template --output-template-file integration-test-template-packaged.yaml
+	@echo 'Deploy stage-integration-test-stack'
+	sam deploy --template-file integration-test-template-packaged.yaml --s3-bucket ringoid-cloudformation-template --stack-name stage-integration-test-stack --capabilities CAPABILITY_IAM --parameter-overrides Env=stage --no-fail-on-empty-changeset
 
 clean:
 	@echo '--- Delete old artifacts ---'

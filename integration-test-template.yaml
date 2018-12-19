@@ -7,30 +7,41 @@ Mappings:
   LogMap:
     PapertrailLog:
       test: "logs7.papertrailapp.com:32515"
+      stage: "logs7.papertrailapp.com:32515"
 
   FunctionName:
     GenerateUsersFunction:
       test: test-generate-users-integration-test
+      stage: stage-generate-users-integration-test
     ImageServiceTestFunction:
       test: test-image-service-integration-test
+      stage: stage-image-service-integration-test
     FeedsServiceTestFunction:
       test: test-feeds-service-integration-test
+      stage: stage-feeds-service-integration-test
     ActionsServiceTestFunction:
       test: test-actions-service-integration-test
+      stage: stage-actions-service-integration-test
     AuthServiceTestFunction:
       test: test-auth-service-integration-test
+      stage: stage-auth-service-integration-test
     ComplexTestFunction:
       test: test-complex-integration-test
+      stage: stage-complex-integration-test
 
   ApiEndpoint:
     Auth:
       test: "https://test.ringoidapp.com/auth"
+      stage: "https://stage.ringoidapp.com/auth"
     Image:
       test: "https://test.ringoidapp.com/image"
+      stage: "https://stage.ringoidapp.com/image"
     Actions:
       test: "https://test.ringoidapp.com/actions"
+      stage: "https://stage.ringoidapp.com/actions"
     Feeds:
       test: "https://test.ringoidapp.com/feeds"
+      stage: "https://stage.ringoidapp.com/feeds"
 
 Parameters:
   Env:
@@ -38,6 +49,7 @@ Parameters:
     Default: test
     AllowedValues:
       - test
+      - stage
     Description: Env name
 
 Globals:
