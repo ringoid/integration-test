@@ -119,14 +119,17 @@ func CleanAllDB(lc *lambdacontext.LambdaContext) {
 	if err != nil {
 		panic(err)
 	}
+	Anlogger.Warnf(lc, "common_action.go : successfully clean %s", cleanAuthDbFunctionName)
 	_, err = clientLambda.Invoke(&lambda.InvokeInput{FunctionName: aws.String(cleanImageDbFunctionName),})
 	if err != nil {
 		panic(err)
 	}
+	Anlogger.Warnf(lc, "common_action.go : successfully clean %s", cleanImageDbFunctionName)
 	_, err = clientLambda.Invoke(&lambda.InvokeInput{FunctionName: aws.String(cleanRelationshipsDbFunctionName),})
 	if err != nil {
 		panic(err)
 	}
+	Anlogger.Warnf(lc, "common_action.go : successfully clean %s", cleanRelationshipsDbFunctionName)
 	Anlogger.Warnf(lc, "common_action.go : successfully end clean all DB")
 }
 
@@ -305,12 +308,13 @@ func makePostRequest(baseApi string, jsonBody []byte, urlPart string, useValidBu
 func GenerateImage(isItMan bool, text string) []byte {
 	white := "ffffff"
 	black := "000000"
+	blue := "0011ff"
 	//background, text color, text
 	urlStr := "https://dummyimage.com/900/%s/%s.jpg&text=%s"
 	if isItMan {
-		urlStr = fmt.Sprintf(urlStr, black, white, text)
+		urlStr = fmt.Sprintf(urlStr, blue, white, text)
 	} else {
-		urlStr = fmt.Sprintf(urlStr, white, black, text)
+		urlStr = fmt.Sprintf(urlStr, black, white, text)
 	}
 
 	req, err := http.NewRequest("GET", urlStr, nil)
