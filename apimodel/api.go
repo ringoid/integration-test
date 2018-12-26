@@ -169,7 +169,7 @@ type Profile struct {
 	UserId                      string  `json:"userId"`
 	DefaultSortingOrderPosition int     `json:"defaultSortingOrderPosition"`
 	Photos                      []Photo `json:"photos"`
-	Unseen                      bool    `json:"unseen"`
+	Unseen                      bool    `json:"notSeen"`
 }
 
 func (p Profile) String() string {

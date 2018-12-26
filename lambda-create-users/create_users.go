@@ -32,7 +32,7 @@ func generateUser(baseNum, i int, sex string, lc *lambdacontext.LambdaContext) {
 	apimodel.Anlogger.Debugf(lc, "user with baseNum [%d], sex [%s] and token [%s] was generated",
 		baseNum, sex, resp.AccessToken)
 	for j := 0; j < 3+rand.Intn(3); j++ {
-		time.Sleep(1 * time.Second)
+		time.Sleep(5 * time.Second)
 		image := apimodel.GenerateImage("male" == sex, fmt.Sprintf("%d.%d.%d", baseNum, i, j))
 		getPresignResp := apimodel.GetPresignUrl(resp.AccessToken, true, lc)
 		apimodel.MakePutRequestWithContent(getPresignResp.Uri, image)
