@@ -47,8 +47,20 @@ const (
 	MatchesSourceFeed    = "matches"
 	MessagesSourceFeed   = "messages"
 
-	ViewActionType   = "VIEW"
-	LikeActionType   = "LIKE"
-	UnlikeActionType = "UNLIKE"
-	BlockActionType  = "BLOCK"
+	ViewActionType    = "VIEW"
+	LikeActionType    = "LIKE"
+	UnlikeActionType  = "UNLIKE"
+	BlockActionType   = "BLOCK"
+	MessageActionType = "MESSAGE"
 )
+
+
+type Bot struct {
+	BotId          string
+	BotAccessToken string
+	IsPassive      bool
+}
+
+func (obj Bot) String() string {
+	return fmt.Sprintf("%#v", obj)
+}

@@ -28,6 +28,17 @@ Mappings:
     ComplexTestFunction:
       test: test-complex-integration-test
       stage: stage-complex-integration-test
+    BotsFunctin:
+      test: test-bots-test
+      stage: stage-bots-test
+    CreateBotsFunctin:
+      test: test-create-bots-test
+      stage: stage-create-bots-test
+
+  TableName:
+    BotsTable:
+      test: test-bots-integration-test
+      stage: stage-bots-integration-test
 
   ApiEndpoint:
     Auth:
@@ -74,6 +85,7 @@ Globals:
             CLEAN_RELATIONSHIPS_DB_FUNCTION_NAME:
               Fn::ImportValue:
                 !Join [ "-", [ !Ref Env, InternalCleanDbRelationshipsFunctionExport] ]
+            BOTS_TABLE_NAME: !FindInMap [TableName, BotsTable, !Ref Env]
 
         Tags:
           Company: Ringoid
@@ -147,3 +159,58 @@ Resources:
       Policies:
         - AWSLambdaFullAccess
         - SecretsManagerReadWrite
+
+  #----------------- Bots section ------------------------
+  BotsFunctin:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !FindInMap [FunctionName, BotsFunctin, !Ref Env]
+      Handler: bots
+      CodeUri: ./bots.zip
+      Description: Bots
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - AmazonSQSFullAccess
+        - AWSLambdaFullAccess
+        - SecretsManagerReadWrite
+      Events:
+        BotEvent:
+          Type: SQS
+          Properties:
+            Queue:
+              Fn::ImportValue:
+                !Join [ "-", [ !Ref Env, BotSqsQueueArnExport] ]
+            BatchSize: 1
+
+  CreateBotsFunctin:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !FindInMap [FunctionName, CreateBotsFunctin, !Ref Env]
+      Handler: create_bots
+      CodeUri: ./create_bots.zip
+      Description: Create Bots
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - SecretsManagerReadWrite
+
+  BotsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+          TableName: !FindInMap [TableName, BotsTable, !Ref Env]
+          BillingMode: PAY_PER_REQUEST
+          AttributeDefinitions:
+            -
+              AttributeName: user_id
+              AttributeType: S
+
+          KeySchema:
+            -
+              AttributeName: user_id
+              KeyType: HASH
+          Tags:
+            - Key: Company
+              Value: Ringoid
+            - Key: Service
+              Value: integration-test
+            - Key: Environment
+              Value: !Ref Env

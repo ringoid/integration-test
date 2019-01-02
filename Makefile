@@ -14,6 +14,10 @@ build:
 	GOOS=linux go build lambda-auth-test/test_auth.go
 	@echo '--- Building complex-integration-test function ---'
 	GOOS=linux go build lambda-complex-test/test_complex.go
+	@echo '--- Building bots function ---'
+	GOOS=linux go build lambda-bots/bots.go lambda-bots/bots_common.go lambda-bots/handle_like.go lambda-bots/handle_message.go
+	@echo '--- Building create-bots function ---'
+	GOOS=linux go build lambda-create-bots/create_bots.go
 
 zip_lambda: build
 	@echo '--- Zip generate-users-integration-test function ---'
@@ -28,6 +32,10 @@ zip_lambda: build
 	zip test_auth.zip ./test_auth
 	@echo '--- Zip complex-integration-test function ---'
 	zip test_complex.zip ./test_complex
+	@echo '--- Zip bots-integration-test function ---'
+	zip bots.zip ./bots
+	@echo '--- Zip create-bots-integration-test function ---'
+	zip create_bots.zip ./create_bots
 
 test-deploy: zip_lambda
 	@echo '--- Build lambda test ---'
@@ -57,4 +65,9 @@ clean:
 	rm -rf test_auth
 	rm -rf test_complex
 	rm -rf test_complex.zip
+	rm -rf bots.zip
+	rm -rf bots
+	rm -rf create_bots
+	rm -rf create_bots.zip
+
 

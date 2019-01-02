@@ -15,6 +15,7 @@ import (
 	"strings"
 	"strconv"
 	"github.com/ringoid/commons"
+	"github.com/aws/aws-sdk-go/service/dynamodb"
 )
 
 var Anlogger *commons.Logger
@@ -28,6 +29,9 @@ var cleanAuthDbFunctionName string
 var cleanImageDbFunctionName string
 var cleanRelationshipsDbFunctionName string
 var secretWord string
+
+var AwsDynamoDB *dynamodb.DynamoDB
+var BotsTableName string
 
 func init() {
 	var env string
@@ -93,6 +97,12 @@ func init() {
 	}
 	Anlogger.Debugf(nil, "lambda-initialization : common_action.go : start with CLEAN_IMAGE_DB_FUNCTION_NAME = [%s]", cleanImageDbFunctionName)
 
+	BotsTableName, ok = os.LookupEnv("BOTS_TABLE_NAME")
+	if !ok {
+		Anlogger.Fatalf(nil, "lambda-initialization : common_action.go : env can not be empty BOTS_TABLE_NAME")
+	}
+	Anlogger.Debugf(nil, "lambda-initialization : common_action.go : start with BOTS_TABLE_NAME = [%s]", BotsTableName)
+
 	cleanRelationshipsDbFunctionName, ok = os.LookupEnv("CLEAN_RELATIONSHIPS_DB_FUNCTION_NAME")
 	if !ok {
 		Anlogger.Fatalf(nil, "lambda-initialization : common_action.go : env can not be empty CLEAN_RELATIONSHIPS_DB_FUNCTION_NAME")
@@ -111,6 +121,9 @@ func init() {
 	Anlogger.Debugf(nil, "lambda-initialization : common_action.go : lambda client was successfully initialized")
 
 	secretWord = commons.GetSecret(fmt.Sprintf(commons.SecretWordKeyBase, env), commons.SecretWordKeyName, awsSession, Anlogger, nil)
+
+	AwsDynamoDB = dynamodb.New(awsSession)
+	Anlogger.Debugf(nil, "lambda-initialization : common_action.go : dynamodb client was successfully initialized")
 }
 
 func CleanAllDB(lc *lambdacontext.LambdaContext) {

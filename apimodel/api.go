@@ -166,10 +166,11 @@ func (req DeletePhotoReq) String() string {
 }
 
 type Profile struct {
-	UserId                      string  `json:"userId"`
-	DefaultSortingOrderPosition int     `json:"defaultSortingOrderPosition"`
-	Photos                      []Photo `json:"photos"`
-	Unseen                      bool    `json:"notSeen"`
+	UserId                      string    `json:"userId"`
+	DefaultSortingOrderPosition int       `json:"defaultSortingOrderPosition"`
+	Unseen                      bool      `json:"notSeen"`
+	Photos                      []Photo   `json:"photos"`
+	Messages                    []Message `json:"messages"`
 }
 
 func (p Profile) String() string {
@@ -183,6 +184,11 @@ type Photo struct {
 
 func (p Photo) String() string {
 	return fmt.Sprintf("%#v", p)
+}
+
+type Message struct {
+	WasYouSender bool   `json:"wasYouSender"`
+	Text         string `json:"text"`
 }
 
 type GetNewFacesResp struct {
@@ -221,6 +227,7 @@ type Action struct {
 	LikeCount     int    `json:"likeCount"`
 	ViewCount     int    `json:"viewCount"`
 	ViewTimeSec   int    `json:"viewTimeSec"`
+	Text          string `json:"text"`
 	ActionTime    int    `json:"actionTime"`
 }
 
@@ -232,6 +239,7 @@ type LMMFeedResp struct {
 	BaseResponse
 	LikesYou              []Profile `json:"likesYou"`
 	Matches               []Profile `json:"matches"`
+	Messages              []Profile `json:"messages"`
 	RepeatRequestAfterSec int       `json:"repeatRequestAfterSec"`
 }
 

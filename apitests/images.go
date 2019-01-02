@@ -200,3 +200,14 @@ func UploadImage(token, sex string, baseNum, imageNum int, lc *lambdacontext.Lam
 	apimodel.MakePutRequestWithContent(getPresignResp.Uri, image)
 	return getPresignResp.OriginPhotoId
 }
+
+func UploadImageWithPrefix(token, sex, imagePrefix string, imageNum int, lc *lambdacontext.LambdaContext) string {
+	getPresignResp := apimodel.GetPresignUrl(token, true, lc)
+	if len(getPresignResp.ErrorCode) != 0 {
+		panic(fmt.Sprintf("error call get presign, token [%s], image prefix [%s], imageNum [%d], error code %s",
+			token, imagePrefix, imageNum, getPresignResp.ErrorCode))
+	}
+	image := apimodel.GenerateImage(sex == "male", fmt.Sprintf("%s.%d", imagePrefix, imageNum))
+	apimodel.MakePutRequestWithContent(getPresignResp.Uri, image)
+	return getPresignResp.OriginPhotoId
+}
