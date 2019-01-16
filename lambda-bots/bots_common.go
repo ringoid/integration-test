@@ -42,7 +42,7 @@ func wakeUpActiveBots(all []apimodel.Bot, lc *lambdacontext.LambdaContext) error
 		if !bot.IsPassive {
 			apimodel.Anlogger.Debugf(lc, "bots_common.go : found active bot %v", bot)
 
-			newFaces := apimodel.GetNewFaces(bot.BotAccessToken, apimodel.PhotoResolution1440x1920, true, lc)
+			newFaces := apimodel.GetNewFaces(bot.BotAccessToken, apimodel.PhotoResolution1440x1920, 0, true, lc)
 			for _, each := range newFaces.Profiles {
 				apimodel.Anlogger.Debugf(lc, "bots_common.go : send a like from newFaces for %v", each)
 

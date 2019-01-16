@@ -466,11 +466,12 @@ func Actions(accessToken string, actions []Action, useValidBuildNum bool, lc *la
 	return response
 }
 
-func GetNewFaces(accessToken, resolution string, useValidBuildNum bool, lc *lambdacontext.LambdaContext) GetNewFacesResp {
+func GetNewFaces(accessToken, resolution string, lastActionTime int, useValidBuildNum bool, lc *lambdacontext.LambdaContext) GetNewFacesResp {
 	Anlogger.Debugf(lc, "common_action.go : actions, token [%s], resolution [%s]", accessToken, resolution)
 	params := make(map[string]string)
 	params["accessToken"] = accessToken
 	params["resolution"] = resolution
+	params["lastActionTime"] = strconv.Itoa(lastActionTime)
 	respBody := makeGetRequest(feedsApiEndpoint, params, "/get_new_faces", useValidBuildNum)
 	response := GetNewFacesResp{}
 	err := json.Unmarshal(respBody, &response)
