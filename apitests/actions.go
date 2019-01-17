@@ -8,14 +8,14 @@ import (
 func ActionsWithOldBuildNum(lc *lambdacontext.LambdaContext) {
 	token := CreateUser("female", lc)
 	actions := []apimodel.Action{apimodel.Action{
-		ActionType:    apimodel.LikeActionType,
-		SourceFeed:    apimodel.NewFacesSourceFeed,
-		TargetPhotoId: "targetPhotoId",
-		TargetUserId:  "targetUserId",
-		LikeCount:     1,
-		ViewCount:     1,
-		ViewTimeSec:   2,
-		ActionTime:    123,
+		ActionType:     apimodel.LikeActionType,
+		SourceFeed:     apimodel.NewFacesSourceFeed,
+		TargetPhotoId:  "targetPhotoId",
+		TargetUserId:   "targetUserId",
+		LikeCount:      1,
+		ViewCount:      1,
+		ViewTimeMillis: 2,
+		ActionTime:     123,
 	}}
 	resp := apimodel.Actions(token, actions, false, lc)
 	if resp.ErrorCode != "TooOldAppVersionClientError" {
@@ -27,14 +27,14 @@ func ActionsWithOldAccessToken(lc *lambdacontext.LambdaContext) {
 	token := CreateUser("female", lc)
 	DeleteUser(token, lc)
 	actions := []apimodel.Action{apimodel.Action{
-		ActionType:    apimodel.LikeActionType,
-		SourceFeed:    apimodel.NewFacesSourceFeed,
-		TargetPhotoId: "targetPhotoId",
-		TargetUserId:  "targetUserId",
-		LikeCount:     1,
-		ViewCount:     1,
-		ViewTimeSec:   2,
-		ActionTime:    123,
+		ActionType:     apimodel.LikeActionType,
+		SourceFeed:     apimodel.NewFacesSourceFeed,
+		TargetPhotoId:  "targetPhotoId",
+		TargetUserId:   "targetUserId",
+		LikeCount:      1,
+		ViewCount:      1,
+		ViewTimeMillis: 2,
+		ActionTime:     123,
 	}}
 	resp := apimodel.Actions(token, actions, true, lc)
 	if resp.ErrorCode != "InvalidAccessTokenClientError" {
@@ -53,13 +53,13 @@ func ActionsWithNilActions(lc *lambdacontext.LambdaContext) {
 func ActionsWithEmptySourceFeed(lc *lambdacontext.LambdaContext) {
 	token := CreateUser("female", lc)
 	actions := []apimodel.Action{apimodel.Action{
-		ActionType:    apimodel.LikeActionType,
-		TargetPhotoId: "targetPhotoId",
-		TargetUserId:  "targetUserId",
-		LikeCount:     1,
-		ViewCount:     1,
-		ViewTimeSec:   2,
-		ActionTime:    123,
+		ActionType:     apimodel.LikeActionType,
+		TargetPhotoId:  "targetPhotoId",
+		TargetUserId:   "targetUserId",
+		LikeCount:      1,
+		ViewCount:      1,
+		ViewTimeMillis: 2,
+		ActionTime:     123,
 	}}
 	resp := apimodel.Actions(token, actions, true, lc)
 	if resp.ErrorCode != "WrongParamsClientError" {
@@ -70,14 +70,14 @@ func ActionsWithEmptySourceFeed(lc *lambdacontext.LambdaContext) {
 func ActionsWithWrongSourceFeed(lc *lambdacontext.LambdaContext) {
 	token := CreateUser("female", lc)
 	actions := []apimodel.Action{apimodel.Action{
-		SourceFeed:    apimodel.NewFacesSourceFeed + "s",
-		ActionType:    apimodel.LikeActionType,
-		TargetPhotoId: "targetPhotoId",
-		TargetUserId:  "targetUserId",
-		LikeCount:     1,
-		ViewCount:     1,
-		ViewTimeSec:   2,
-		ActionTime:    123,
+		SourceFeed:     apimodel.NewFacesSourceFeed + "s",
+		ActionType:     apimodel.LikeActionType,
+		TargetPhotoId:  "targetPhotoId",
+		TargetUserId:   "targetUserId",
+		LikeCount:      1,
+		ViewCount:      1,
+		ViewTimeMillis: 2,
+		ActionTime:     123,
 	}}
 	resp := apimodel.Actions(token, actions, true, lc)
 	if resp.ErrorCode != "WrongParamsClientError" {
@@ -88,13 +88,13 @@ func ActionsWithWrongSourceFeed(lc *lambdacontext.LambdaContext) {
 func ActionsWithEmptyActionType(lc *lambdacontext.LambdaContext) {
 	token := CreateUser("female", lc)
 	actions := []apimodel.Action{apimodel.Action{
-		SourceFeed:    apimodel.NewFacesSourceFeed,
-		TargetPhotoId: "targetPhotoId",
-		TargetUserId:  "targetUserId",
-		LikeCount:     1,
-		ViewCount:     1,
-		ViewTimeSec:   2,
-		ActionTime:    123,
+		SourceFeed:     apimodel.NewFacesSourceFeed,
+		TargetPhotoId:  "targetPhotoId",
+		TargetUserId:   "targetUserId",
+		LikeCount:      1,
+		ViewCount:      1,
+		ViewTimeMillis: 2,
+		ActionTime:     123,
 	}}
 	resp := apimodel.Actions(token, actions, true, lc)
 	if resp.ErrorCode != "WrongParamsClientError" {
@@ -105,14 +105,14 @@ func ActionsWithEmptyActionType(lc *lambdacontext.LambdaContext) {
 func ActionsWithWrongActionType(lc *lambdacontext.LambdaContext) {
 	token := CreateUser("female", lc)
 	actions := []apimodel.Action{apimodel.Action{
-		SourceFeed:    apimodel.NewFacesSourceFeed,
-		ActionType:    apimodel.LikeActionType + "s",
-		TargetPhotoId: "targetPhotoId",
-		TargetUserId:  "targetUserId",
-		LikeCount:     1,
-		ViewCount:     1,
-		ViewTimeSec:   2,
-		ActionTime:    123,
+		SourceFeed:     apimodel.NewFacesSourceFeed,
+		ActionType:     apimodel.LikeActionType + "s",
+		TargetPhotoId:  "targetPhotoId",
+		TargetUserId:   "targetUserId",
+		LikeCount:      1,
+		ViewCount:      1,
+		ViewTimeMillis: 2,
+		ActionTime:     123,
 	}}
 	resp := apimodel.Actions(token, actions, true, lc)
 	if resp.ErrorCode != "WrongParamsClientError" {
@@ -123,13 +123,13 @@ func ActionsWithWrongActionType(lc *lambdacontext.LambdaContext) {
 func ActionsWithEmptyTargetUserId(lc *lambdacontext.LambdaContext) {
 	token := CreateUser("female", lc)
 	actions := []apimodel.Action{apimodel.Action{
-		SourceFeed:    apimodel.NewFacesSourceFeed,
-		ActionType:    apimodel.LikeActionType,
-		TargetPhotoId: "targetPhotoId",
-		LikeCount:     1,
-		ViewCount:     1,
-		ViewTimeSec:   2,
-		ActionTime:    123,
+		SourceFeed:     apimodel.NewFacesSourceFeed,
+		ActionType:     apimodel.LikeActionType,
+		TargetPhotoId:  "targetPhotoId",
+		LikeCount:      1,
+		ViewCount:      1,
+		ViewTimeMillis: 2,
+		ActionTime:     123,
 	}}
 	resp := apimodel.Actions(token, actions, true, lc)
 	if resp.ErrorCode != "WrongParamsClientError" {
@@ -140,13 +140,13 @@ func ActionsWithEmptyTargetUserId(lc *lambdacontext.LambdaContext) {
 func ActionsWithEmptyTargetPhotoId(lc *lambdacontext.LambdaContext) {
 	token := CreateUser("female", lc)
 	actions := []apimodel.Action{apimodel.Action{
-		SourceFeed:   apimodel.NewFacesSourceFeed,
-		ActionType:   apimodel.LikeActionType,
-		TargetUserId: "targetUserId",
-		LikeCount:    1,
-		ViewCount:    1,
-		ViewTimeSec:  2,
-		ActionTime:   123,
+		SourceFeed:     apimodel.NewFacesSourceFeed,
+		ActionType:     apimodel.LikeActionType,
+		TargetUserId:   "targetUserId",
+		LikeCount:      1,
+		ViewCount:      1,
+		ViewTimeMillis: 2,
+		ActionTime:     123,
 	}}
 	resp := apimodel.Actions(token, actions, true, lc)
 	if resp.ErrorCode != "WrongParamsClientError" {

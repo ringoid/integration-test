@@ -55,14 +55,14 @@ func wakeUpActiveBots(all []apimodel.Bot, lc *lambdacontext.LambdaContext) error
 
 				actions := []apimodel.Action{
 					apimodel.Action{
-						SourceFeed:    apimodel.NewFacesSourceFeed,
-						ActionType:    apimodel.ViewActionType,
-						TargetPhotoId: targetPhoto.PhotoId,
-						TargetUserId:  each.UserId,
-						LikeCount:     0,
-						ViewCount:     1,
-						ViewTimeSec:   2,
-						ActionTime:    int(time.Now().Unix()),
+						SourceFeed:     apimodel.NewFacesSourceFeed,
+						ActionType:     apimodel.ViewActionType,
+						TargetPhotoId:  targetPhoto.PhotoId,
+						TargetUserId:   each.UserId,
+						LikeCount:      0,
+						ViewCount:      1,
+						ViewTimeMillis: 2,
+						ActionTime:     time.Now().Round(time.Millisecond).UnixNano() / 1000000,
 					},
 					apimodel.Action{
 						SourceFeed:    apimodel.NewFacesSourceFeed,
@@ -70,7 +70,7 @@ func wakeUpActiveBots(all []apimodel.Bot, lc *lambdacontext.LambdaContext) error
 						TargetPhotoId: targetPhoto.PhotoId,
 						TargetUserId:  each.UserId,
 						LikeCount:     1,
-						ActionTime:    int(time.Now().Unix()),
+						ActionTime:    time.Now().Round(time.Millisecond).UnixNano() / 1000000,
 					},
 				}
 				apimodel.Actions(bot.BotAccessToken, actions, true, lc)
@@ -89,14 +89,14 @@ func wakeUpActiveBots(all []apimodel.Bot, lc *lambdacontext.LambdaContext) error
 
 				actions := []apimodel.Action{
 					apimodel.Action{
-						SourceFeed:    apimodel.WhoLikedMeSourceFeed,
-						ActionType:    apimodel.ViewActionType,
-						TargetPhotoId: targetPhoto.PhotoId,
-						TargetUserId:  each.UserId,
-						LikeCount:     0,
-						ViewCount:     1,
-						ViewTimeSec:   2,
-						ActionTime:    int(time.Now().Unix()),
+						SourceFeed:     apimodel.WhoLikedMeSourceFeed,
+						ActionType:     apimodel.ViewActionType,
+						TargetPhotoId:  targetPhoto.PhotoId,
+						TargetUserId:   each.UserId,
+						LikeCount:      0,
+						ViewCount:      1,
+						ViewTimeMillis: 2,
+						ActionTime:     time.Now().Round(time.Millisecond).UnixNano() / 1000000,
 					},
 					apimodel.Action{
 						SourceFeed:    apimodel.WhoLikedMeSourceFeed,
@@ -104,7 +104,7 @@ func wakeUpActiveBots(all []apimodel.Bot, lc *lambdacontext.LambdaContext) error
 						TargetPhotoId: targetPhoto.PhotoId,
 						TargetUserId:  each.UserId,
 						LikeCount:     1,
-						ActionTime:    int(time.Now().Unix()),
+						ActionTime:    time.Now().Round(time.Millisecond).UnixNano() / 1000000,
 					},
 				}
 				apimodel.Actions(bot.BotAccessToken, actions, true, lc)
@@ -121,14 +121,14 @@ func wakeUpActiveBots(all []apimodel.Bot, lc *lambdacontext.LambdaContext) error
 				randomText := fmt.Sprintf("Message from a bot (rand num %d)", rand.Intn(100))
 				actions := []apimodel.Action{
 					apimodel.Action{
-						SourceFeed:    apimodel.MatchesSourceFeed,
-						ActionType:    apimodel.ViewActionType,
-						TargetPhotoId: targetPhoto.PhotoId,
-						TargetUserId:  each.UserId,
-						LikeCount:     0,
-						ViewCount:     1,
-						ViewTimeSec:   2,
-						ActionTime:    int(time.Now().Unix()),
+						SourceFeed:     apimodel.MatchesSourceFeed,
+						ActionType:     apimodel.ViewActionType,
+						TargetPhotoId:  targetPhoto.PhotoId,
+						TargetUserId:   each.UserId,
+						LikeCount:      0,
+						ViewCount:      1,
+						ViewTimeMillis: 2,
+						ActionTime:     time.Now().Round(time.Millisecond).UnixNano() / 1000000,
 					},
 					apimodel.Action{
 						SourceFeed:    apimodel.MatchesSourceFeed,
@@ -136,7 +136,7 @@ func wakeUpActiveBots(all []apimodel.Bot, lc *lambdacontext.LambdaContext) error
 						TargetPhotoId: targetPhoto.PhotoId,
 						TargetUserId:  each.UserId,
 						Text:          randomText,
-						ActionTime:    int(time.Now().Unix()),
+						ActionTime:    time.Now().Round(time.Millisecond).UnixNano() / 1000000,
 					},
 				}
 				apimodel.Actions(bot.BotAccessToken, actions, true, lc)
@@ -153,14 +153,14 @@ func wakeUpActiveBots(all []apimodel.Bot, lc *lambdacontext.LambdaContext) error
 				randomText := fmt.Sprintf("Message from a bot (rand num %d)", rand.Intn(100))
 				actions := []apimodel.Action{
 					apimodel.Action{
-						SourceFeed:    apimodel.MessagesSourceFeed,
-						ActionType:    apimodel.ViewActionType,
-						TargetPhotoId: targetPhoto.PhotoId,
-						TargetUserId:  each.UserId,
-						LikeCount:     0,
-						ViewCount:     1,
-						ViewTimeSec:   2,
-						ActionTime:    int(time.Now().Unix()),
+						SourceFeed:     apimodel.MessagesSourceFeed,
+						ActionType:     apimodel.ViewActionType,
+						TargetPhotoId:  targetPhoto.PhotoId,
+						TargetUserId:   each.UserId,
+						LikeCount:      0,
+						ViewCount:      1,
+						ViewTimeMillis: 2,
+						ActionTime:     time.Now().Round(time.Millisecond).UnixNano() / 1000000,
 					},
 					apimodel.Action{
 						SourceFeed:    apimodel.MessagesSourceFeed,
@@ -168,7 +168,7 @@ func wakeUpActiveBots(all []apimodel.Bot, lc *lambdacontext.LambdaContext) error
 						TargetPhotoId: targetPhoto.PhotoId,
 						TargetUserId:  each.UserId,
 						Text:          randomText,
-						ActionTime:    int(time.Now().Unix()),
+						ActionTime:    time.Now().Round(time.Millisecond).UnixNano() / 1000000,
 					},
 				}
 				apimodel.Actions(bot.BotAccessToken, actions, true, lc)

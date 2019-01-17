@@ -13,7 +13,6 @@ import (
 	"bytes"
 	"io/ioutil"
 	"strings"
-	"strconv"
 	"github.com/ringoid/commons"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 )
@@ -466,12 +465,12 @@ func Actions(accessToken string, actions []Action, useValidBuildNum bool, lc *la
 	return response
 }
 
-func GetNewFaces(accessToken, resolution string, lastActionTime int, useValidBuildNum bool, lc *lambdacontext.LambdaContext) GetNewFacesResp {
+func GetNewFaces(accessToken, resolution string, lastActionTime int64, useValidBuildNum bool, lc *lambdacontext.LambdaContext) GetNewFacesResp {
 	Anlogger.Debugf(lc, "common_action.go : actions, token [%s], resolution [%s]", accessToken, resolution)
 	params := make(map[string]string)
 	params["accessToken"] = accessToken
 	params["resolution"] = resolution
-	params["lastActionTime"] = strconv.Itoa(lastActionTime)
+	params["lastActionTime"] = fmt.Sprintf("%v", lastActionTime)
 	respBody := makeGetRequest(feedsApiEndpoint, params, "/get_new_faces", useValidBuildNum)
 	response := GetNewFacesResp{}
 	err := json.Unmarshal(respBody, &response)
@@ -483,13 +482,13 @@ func GetNewFaces(accessToken, resolution string, lastActionTime int, useValidBui
 	return response
 }
 
-func GetLMM(accessToken, resolution string, lastActionTime int, useValidBuildNum bool, lc *lambdacontext.LambdaContext) LMMFeedResp {
+func GetLMM(accessToken, resolution string, lastActionTime int64, useValidBuildNum bool, lc *lambdacontext.LambdaContext) LMMFeedResp {
 	Anlogger.Debugf(lc, "common_action.go : llm, token [%s], resolution [%s], lastActionTime [%d], use valid build num [%v]",
 		accessToken, resolution, lastActionTime, useValidBuildNum)
 	params := make(map[string]string)
 	params["accessToken"] = accessToken
 	params["resolution"] = resolution
-	params["lastActionTime"] = strconv.Itoa(lastActionTime)
+	params["lastActionTime"] = fmt.Sprintf("%v", lastActionTime)
 	respBody := makeGetRequest(feedsApiEndpoint, params, "/get_lmm", useValidBuildNum)
 	response := LMMFeedResp{}
 	err := json.Unmarshal(respBody, &response)

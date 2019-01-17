@@ -88,14 +88,14 @@ func message(body string, bots []apimodel.Bot, lc *lambdacontext.LambdaContext) 
 	randomText := fmt.Sprintf("Message from a bot (rand num %d)", rand.Intn(100))
 	actions := []apimodel.Action{
 		apimodel.Action{
-			SourceFeed:    sourceFeed,
-			ActionType:    apimodel.ViewActionType,
-			TargetPhotoId: targetPhoto.PhotoId,
-			TargetUserId:  aEvent.UserId,
-			LikeCount:     0,
-			ViewCount:     1,
-			ViewTimeSec:   2,
-			ActionTime:    int(time.Now().Unix()),
+			SourceFeed:     sourceFeed,
+			ActionType:     apimodel.ViewActionType,
+			TargetPhotoId:  targetPhoto.PhotoId,
+			TargetUserId:   aEvent.UserId,
+			LikeCount:      0,
+			ViewCount:      1,
+			ViewTimeMillis: 2,
+			ActionTime:     time.Now().Round(time.Millisecond).UnixNano() / 1000000,
 		},
 		apimodel.Action{
 			SourceFeed:    sourceFeed,
@@ -103,7 +103,7 @@ func message(body string, bots []apimodel.Bot, lc *lambdacontext.LambdaContext) 
 			TargetPhotoId: targetPhoto.PhotoId,
 			TargetUserId:  aEvent.UserId,
 			Text:          randomText,
-			ActionTime:    int(time.Now().Unix()),
+			ActionTime:    time.Now().Round(time.Millisecond).UnixNano() / 1000000,
 		},
 	}
 	apimodel.Actions(targetBot.BotAccessToken, actions, true, lc)

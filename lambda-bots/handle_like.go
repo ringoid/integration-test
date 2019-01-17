@@ -87,14 +87,14 @@ func like(body string, bots []apimodel.Bot, lc *lambdacontext.LambdaContext) err
 
 	actions := []apimodel.Action{
 		apimodel.Action{
-			SourceFeed:    sourceFeed,
-			ActionType:    apimodel.ViewActionType,
-			TargetPhotoId: targetPhoto.PhotoId,
-			TargetUserId:  aEvent.UserId,
-			LikeCount:     0,
-			ViewCount:     1,
-			ViewTimeSec:   2,
-			ActionTime:    int(time.Now().Unix()),
+			SourceFeed:     sourceFeed,
+			ActionType:     apimodel.ViewActionType,
+			TargetPhotoId:  targetPhoto.PhotoId,
+			TargetUserId:   aEvent.UserId,
+			LikeCount:      0,
+			ViewCount:      1,
+			ViewTimeMillis: 2,
+			ActionTime:     time.Now().Round(time.Millisecond).UnixNano() / 1000000,
 		},
 		apimodel.Action{
 			SourceFeed:    sourceFeed,
@@ -102,7 +102,7 @@ func like(body string, bots []apimodel.Bot, lc *lambdacontext.LambdaContext) err
 			TargetPhotoId: targetPhoto.PhotoId,
 			TargetUserId:  aEvent.UserId,
 			LikeCount:     1,
-			ActionTime:    int(time.Now().Unix()),
+			ActionTime:    time.Now().Round(time.Millisecond).UnixNano() / 1000000,
 		},
 	}
 	apimodel.Actions(targetBot.BotAccessToken, actions, true, lc)
