@@ -36,7 +36,7 @@ func createBots(passiveNum, activeNum int, tableName string, awsDb *dynamodb.Dyn
 	apimodel.Anlogger.Debugf(lc, "create_bots.go : create bots passive [%d] and active [%d]", passiveNum, activeNum)
 
 	for i := 0; i < passiveNum; i++ {
-		userId, token := generateBot(false, "female", i, lc)
+		userId, token := generateCatDogBot(false, "female", lc)
 		bot := apimodel.Bot{
 			BotId:          userId,
 			BotAccessToken: token,
@@ -46,7 +46,7 @@ func createBots(passiveNum, activeNum int, tableName string, awsDb *dynamodb.Dyn
 	}
 
 	for i := 0; i < activeNum; i++ {
-		userId, token := generateBot(true, "female", i, lc)
+		userId, token := generateCatDogBot(true, "female", lc)
 		bot := apimodel.Bot{
 			BotId:          userId,
 			BotAccessToken: token,
@@ -97,6 +97,20 @@ func generateBot(active bool, sex string, baseNum int, lc *lambdacontext.LambdaC
 	apitests.UploadImageWithPrefix(token, sex, prefix, 2, lc)
 	time.Sleep(1 * time.Second)
 	apitests.UploadImageWithPrefix(token, sex, prefix, 3, lc)
+
+	return userId, token
+}
+
+func generateCatDogBot(active bool, sex string, lc *lambdacontext.LambdaContext) (string, string) {
+	token := apitests.CreateUser(sex, lc)
+	userId := apimodel.UserId(token, lc)
+
+	time.Sleep(time.Second)
+	apitests.UploadCatDogImage(token, sex, active, lc)
+	time.Sleep(1 * time.Second)
+	apitests.UploadCatDogImage(token, sex, active, lc)
+	time.Sleep(1 * time.Second)
+	apitests.UploadCatDogImage(token, sex, active, lc)
 
 	return userId, token
 }

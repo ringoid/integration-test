@@ -316,6 +316,94 @@ func makePostRequest(baseApi string, jsonBody []byte, urlPart string, useValidBu
 }
 
 //Image service
+func GenerateCatOrDog(isItActive bool) []byte {
+	var result []byte
+	for {
+		urlStr := "https://api.thecatapi.com/v1/images/search"
+		if isItActive {
+			urlStr = "https://dog.ceo/api/breeds/image/random"
+		}
+		req, err := http.NewRequest("GET", urlStr, nil)
+		if err != nil {
+			panic(err)
+		}
+		client := &http.Client{}
+		httpResponse, err := client.Do(req)
+		if err != nil {
+			panic(err)
+		}
+		defer httpResponse.Body.Close()
+
+		if httpResponse.StatusCode != 200 {
+			panic(fmt.Sprintf("error call generate image, status code [%d]", httpResponse.StatusCode))
+		}
+
+		respBody, err := ioutil.ReadAll(httpResponse.Body)
+		if err != nil {
+			panic(err)
+		}
+
+		var finalUrl string
+		if isItActive {
+			var dogResp DogResponse
+			err = json.Unmarshal(respBody, &dogResp)
+			if err != nil {
+				panic(err)
+			}
+			if !strings.HasSuffix(dogResp.Message, ".jpg") {
+				continue
+			}
+
+			finalUrl = dogResp.Message
+
+		} else {
+			var arrResp []CatResponse
+			err = json.Unmarshal(respBody, &arrResp)
+			if err != nil {
+				panic(err)
+			}
+			if len(arrResp) != 1 {
+				panic(fmt.Sprintf("error call generate image,  0 image returned"))
+			}
+
+			if !strings.HasSuffix(arrResp[0].Url, ".jpg") {
+				continue
+			}
+
+			finalUrl = arrResp[0].Url
+		}
+
+		req, err = http.NewRequest("GET", finalUrl, nil)
+		if err != nil {
+			panic(err)
+		}
+		httpResponse2, err := client.Do(req)
+		if err != nil {
+			panic(err)
+		}
+		defer httpResponse2.Body.Close()
+
+		if httpResponse2.StatusCode != 200 {
+			panic(fmt.Sprintf("error call generate image, status code [%d]", httpResponse.StatusCode))
+		}
+
+		respBody, err = ioutil.ReadAll(httpResponse2.Body)
+		if err != nil {
+			panic(err)
+		}
+		result = respBody
+		break
+	}
+	return result
+}
+
+type CatResponse struct {
+	Url string `json:"url"`
+}
+
+type DogResponse struct {
+	Message string `json:"message"`
+}
 
 func GenerateImage(isItMan bool, text string) []byte {
 	white := "ffffff"

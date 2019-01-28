@@ -211,3 +211,14 @@ func UploadImageWithPrefix(token, sex, imagePrefix string, imageNum int, lc *lam
 	apimodel.MakePutRequestWithContent(getPresignResp.Uri, image)
 	return getPresignResp.OriginPhotoId
 }
+
+func UploadCatDogImage(token, sex string, active bool, lc *lambdacontext.LambdaContext) string {
+	getPresignResp := apimodel.GetPresignUrl(token, true, lc)
+	if len(getPresignResp.ErrorCode) != 0 {
+		panic(fmt.Sprintf("error call get presign, token [%s], error code %s",
+			token, getPresignResp.ErrorCode))
+	}
+	image := apimodel.GenerateCatOrDog(active)
+	apimodel.MakePutRequestWithContent(getPresignResp.Uri, image)
+	return getPresignResp.OriginPhotoId
+}
