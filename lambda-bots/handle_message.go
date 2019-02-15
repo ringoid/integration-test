@@ -22,7 +22,7 @@ func message(body string, bots []apimodel.Bot, lc *lambdacontext.LambdaContext) 
 	//first check if source is a bot
 	for _, each := range bots {
 		if each.BotId == aEvent.UserId {
-			apimodel.Anlogger.Debugf(lc, "like.go : receive like from a bot, so return")
+			apimodel.Anlogger.Debugf(lc, "message.go : receive like from a bot, so return")
 			return nil
 		}
 	}
@@ -85,7 +85,9 @@ func message(body string, bots []apimodel.Bot, lc *lambdacontext.LambdaContext) 
 	}
 	targetPhoto := profile.Photos[randPhotoIndex]
 
-	randomText := fmt.Sprintf("Message from a bot (rand num %d)", rand.Intn(100))
+	textFromBot := fmt.Sprintf("Bot [%s] at [%v] replying to [%s]",
+		targetBot.BotId, time.Now().Format("15:04:05"), aEvent.Text)
+	//randomText := fmt.Sprintf("Message from a bot (rand num %d)", rand.Intn(100))
 	actions := []apimodel.Action{
 		apimodel.Action{
 			SourceFeed:     sourceFeed,
@@ -102,7 +104,7 @@ func message(body string, bots []apimodel.Bot, lc *lambdacontext.LambdaContext) 
 			ActionType:    apimodel.MessageActionType,
 			TargetPhotoId: targetPhoto.PhotoId,
 			TargetUserId:  aEvent.UserId,
-			Text:          randomText,
+			Text:          textFromBot,
 			ActionTime:    time.Now().Round(time.Millisecond).UnixNano() / 1000000,
 		},
 	}
