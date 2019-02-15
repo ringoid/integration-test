@@ -14,6 +14,8 @@ func handler(ctx context.Context, request apimodel.CreateUsersRequest) error {
 
 	apimodel.CleanAllDB(lc)
 
+	//apitests.FirstSpeedLikesYouTest(lc)
+
 	apitests.LLMTest(lc)
 
 	apimodel.CleanAllDB(lc)

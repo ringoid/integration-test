@@ -193,8 +193,9 @@ type Message struct {
 
 type GetNewFacesResp struct {
 	BaseResponse
-	WarmUpRequest bool      `json:"warmUpRequest"`
-	Profiles      []Profile `json:"profiles"`
+	WarmUpRequest         bool      `json:"warmUpRequest"`
+	Profiles              []Profile `json:"profiles"`
+	RepeatRequestAfterSec int       `json:"repeatRequestAfterSec"`
 }
 
 func (resp GetNewFacesResp) String() string {
