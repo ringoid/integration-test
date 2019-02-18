@@ -193,9 +193,9 @@ type Message struct {
 
 type GetNewFacesResp struct {
 	BaseResponse
-	WarmUpRequest         bool      `json:"warmUpRequest"`
-	Profiles              []Profile `json:"profiles"`
-	RepeatRequestAfterSec int       `json:"repeatRequestAfterSec"`
+	WarmUpRequest      bool      `json:"warmUpRequest"`
+	Profiles           []Profile `json:"profiles"`
+	RepeatRequestAfter int       `json:"repeatRequestAfter"`
 }
 
 func (resp GetNewFacesResp) String() string {
@@ -238,10 +238,10 @@ func (req Action) String() string {
 
 type LMMFeedResp struct {
 	BaseResponse
-	LikesYou              []Profile `json:"likesYou"`
-	Matches               []Profile `json:"matches"`
-	Messages              []Profile `json:"messages"`
-	RepeatRequestAfterSec int       `json:"repeatRequestAfterSec"`
+	LikesYou           []Profile `json:"likesYou"`
+	Matches            []Profile `json:"matches"`
+	Messages           []Profile `json:"messages"`
+	RepeatRequestAfter int       `json:"repeatRequestAfter"`
 }
 
 func (resp LMMFeedResp) String() string {

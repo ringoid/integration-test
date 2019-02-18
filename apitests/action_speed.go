@@ -56,13 +56,13 @@ func FirstSpeedLikesYouTest(lc *lambdacontext.LambdaContext) {
 				fmt.Printf("(main info test) Iteration [%d], error while fetch NewFaces : %s\n", i, resp.ErrorCode)
 				panic(fmt.Sprintf("(main info test) Iteration [%d], error while fetch NewFaces : %s\n", i, resp.ErrorCode))
 			}
-			if len(resp.Profiles) != newFacesDefaultLimit && resp.RepeatRequestAfterSec == 0 {
+			if len(resp.Profiles) != newFacesDefaultLimit && resp.RepeatRequestAfter == 0 {
 				fmt.Printf("(main info test) Iteration [%d], error while fetch NewFaces : result profiles num [%d]\n", i, 0)
 				panic(fmt.Sprintf("(main info test) Iteration [%d], error while fetch NewFaces : result profiles num [%d]\n", i, 0))
 			}
 
-			if resp.RepeatRequestAfterSec != 0 {
-				fmt.Printf("(main info test) Iteration [%d], repeat request after sec [%d]\n", i, resp.RepeatRequestAfterSec)
+			if resp.RepeatRequestAfter != 0 {
+				fmt.Printf("(main info test) Iteration [%d], repeat request after sec [%d]\n", i, resp.RepeatRequestAfter)
 				time.Sleep(100 * time.Millisecond)
 			} else {
 				fmt.Printf("(main info test) Iteration [%d], receive response with profiles [%d] at %v\n", i, len(resp.Profiles), time.Now())

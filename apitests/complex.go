@@ -366,8 +366,8 @@ func firstPhaseLikesYouTest(lc *lambdacontext.LambdaContext) (string, string, st
 		panic(fmt.Sprintf("firstPhaseLikesYouTest : complex test, error code %s", resp.ErrorCode))
 	}
 
-	if resp.RepeatRequestAfterSec != 0 {
-		panic(fmt.Sprintf("firstPhaseLikesYouTest : complex test, repeat request not zero, but %s", resp.RepeatRequestAfterSec))
+	if resp.RepeatRequestAfter != 0 {
+		panic(fmt.Sprintf("firstPhaseLikesYouTest : complex test, repeat request not zero, but %s", resp.RepeatRequestAfter))
 	}
 
 	photoReqiredOrder := []string{t2p1, t2p3, t2p2, t1p3, t1p2, t1p1, t1p4}
@@ -405,8 +405,8 @@ func firstPhaseLikesYouTest(lc *lambdacontext.LambdaContext) (string, string, st
 		panic(fmt.Sprintf("firstPhaseLikesYouTest : complex test, error code %s", resp.ErrorCode))
 	}
 
-	if resp.RepeatRequestAfterSec == 0 {
-		panic(fmt.Sprintf("firstPhaseLikesYouTest : complex test, repeat request not zero, but %s", resp.RepeatRequestAfterSec))
+	if resp.RepeatRequestAfter == 0 {
+		panic(fmt.Sprintf("firstPhaseLikesYouTest : complex test, repeat request not zero, but %s", resp.RepeatRequestAfter))
 	}
 
 	result := []Item{
@@ -793,8 +793,8 @@ func secondPhaseLikesYouTest(sourceUserId, sourceToke, sp1, sp2, sp3 string, fir
 		panic(fmt.Sprintf("secondPhaseLikesYouTest : complex test, error code %s", resp.ErrorCode))
 	}
 
-	if resp.RepeatRequestAfterSec != 0 {
-		panic(fmt.Sprintf("secondPhaseLikesYouTest : complex test, repeat request not zero, but %s", resp.RepeatRequestAfterSec))
+	if resp.RepeatRequestAfter != 0 {
+		panic(fmt.Sprintf("secondPhaseLikesYouTest : complex test, repeat request not zero, but %s", resp.RepeatRequestAfter))
 	}
 
 	photoReqiredOrderNewPart := []string{t2p1, t2p3, t2p2, t1p3, t1p2, t1p1, t1p4}
@@ -864,8 +864,8 @@ func secondPhaseLikesYouTest(sourceUserId, sourceToke, sp1, sp2, sp3 string, fir
 		panic(fmt.Sprintf("secondPhaseLikesYouTest : complex test, error code %s", resp.ErrorCode))
 	}
 
-	if resp.RepeatRequestAfterSec == 0 {
-		panic(fmt.Sprintf("secondPhaseLikesYouTest: complex test, repeat request not zero, but %s", resp.RepeatRequestAfterSec))
+	if resp.RepeatRequestAfter == 0 {
+		panic(fmt.Sprintf("secondPhaseLikesYouTest: complex test, repeat request not zero, but %s", resp.RepeatRequestAfter))
 	}
 
 }
@@ -1299,8 +1299,8 @@ func firstPhaseMatchesTest(lc *lambdacontext.LambdaContext) (string, string, str
 		panic(fmt.Sprintf("firstPhaseMatchesTest : complex test, error code %s", resp.ErrorCode))
 	}
 
-	if resp.RepeatRequestAfterSec != 0 {
-		panic(fmt.Sprintf("firstPhaseMatchesTest : complex test, repeat request not zero, but %s", resp.RepeatRequestAfterSec))
+	if resp.RepeatRequestAfter != 0 {
+		panic(fmt.Sprintf("firstPhaseMatchesTest : complex test, repeat request not zero, but %s", resp.RepeatRequestAfter))
 	}
 
 	photoReqiredOrder := []string{t1p3, t1p4, t1p2, t1p1, t2p3, t2p2, t2p1}
@@ -1335,8 +1335,8 @@ func firstPhaseMatchesTest(lc *lambdacontext.LambdaContext) (string, string, str
 		panic(fmt.Sprintf("firstPhaseMatchesTest : complex test, error code %s", resp.ErrorCode))
 	}
 
-	if resp.RepeatRequestAfterSec == 0 {
-		panic(fmt.Sprintf("firstPhaseTest : complex test, repeat request not zero, but %s", resp.RepeatRequestAfterSec))
+	if resp.RepeatRequestAfter == 0 {
+		panic(fmt.Sprintf("firstPhaseTest : complex test, repeat request not zero, but %s", resp.RepeatRequestAfter))
 	}
 
 	result := []Item{
@@ -1791,8 +1791,8 @@ func secondPhaseMatchesYouTest(sourceUserId, sourceToke, sp1, sp2, sp3 string, f
 		panic(fmt.Sprintf("secondPhaseMatchesYouTest : complex test, error code %s", resp.ErrorCode))
 	}
 
-	if resp.RepeatRequestAfterSec != 0 {
-		panic(fmt.Sprintf("secondPhaseMatchesYouTest : complex test, repeat request not zero, but %s", resp.RepeatRequestAfterSec))
+	if resp.RepeatRequestAfter != 0 {
+		panic(fmt.Sprintf("secondPhaseMatchesYouTest : complex test, repeat request not zero, but %s", resp.RepeatRequestAfter))
 	}
 
 	photoReqiredOrderNewPart := []string{t1p3, t1p4, t1p2, t1p1, t2p3, t2p2, t2p1}
@@ -1862,8 +1862,8 @@ func secondPhaseMatchesYouTest(sourceUserId, sourceToke, sp1, sp2, sp3 string, f
 		panic(fmt.Sprintf("secondPhaseMatchesYouTest : complex test, error code %s", resp.ErrorCode))
 	}
 
-	if resp.RepeatRequestAfterSec == 0 {
-		panic(fmt.Sprintf("secondPhaseMatchesYouTest: complex test, repeat request not zero, but %s", resp.RepeatRequestAfterSec))
+	if resp.RepeatRequestAfter == 0 {
+		panic(fmt.Sprintf("secondPhaseMatchesYouTest: complex test, repeat request not zero, but %s", resp.RepeatRequestAfter))
 	}
 
 }
