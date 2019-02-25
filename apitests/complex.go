@@ -1851,7 +1851,7 @@ func secondPhaseMatchesYouTest(sourceUserId, sourceToke, sp1, sp2, sp3 string, f
 
 	for index, _ := range finalPhotoPredictOrderOldPart {
 		if photoActualOrderOldPart[index] != finalPhotoPredictOrderOldPart[index] {
-			panic("secondPhaseMatchesYouTest : complex test, wrong orde of old items")
+			panic("secondPhaseMatchesYouTest : complex test, wrong order of old items")
 		}
 	}
 
