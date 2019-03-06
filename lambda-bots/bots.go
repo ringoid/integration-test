@@ -9,15 +9,19 @@ import (
 	"github.com/ringoid/commons"
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 var bots []apimodel.Bot
+
+var timeForBotUpdate int64
 
 func handler(ctx context.Context, event events.SQSEvent) (error) {
 	lc, _ := lambdacontext.FromContext(ctx)
 	apimodel.Anlogger.Infof(lc, "bots.go : start bots function")
 	var err error
-	if len(bots) == 0 {
+	if timeForBotUpdate == 0 || time.Now().Unix()-timeForBotUpdate > 5 || len(bots) == 0 {
+		timeForBotUpdate = time.Now().Unix()
 		bots, err = getAllBot(apimodel.BotsTableName, apimodel.AwsDynamoDB, nil)
 		if err != nil {
 			return err
