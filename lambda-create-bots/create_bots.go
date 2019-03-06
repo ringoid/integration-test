@@ -25,20 +25,20 @@ func (obj CreateBotsRequest) String() string {
 
 func handler(ctx context.Context, request CreateBotsRequest) (error) {
 	lc, _ := lambdacontext.FromContext(ctx)
-	return createBots(request.PassiveNum, request.ActiveNum, apimodel.BotsTableName, apimodel.AwsDynamoDB, lc)
+	return createBots(request.PassiveNum, request.ActiveNum, request.Sex, apimodel.BotsTableName, apimodel.AwsDynamoDB, lc)
 }
 
 func main() {
 	basicLambda.Start(handler)
 }
 
-func createBots(passiveNum, activeNum int, tableName string, awsDb *dynamodb.DynamoDB, lc *lambdacontext.LambdaContext) error {
+func createBots(passiveNum, activeNum int, targetSex, tableName string, awsDb *dynamodb.DynamoDB, lc *lambdacontext.LambdaContext) error {
 	apimodel.Anlogger.Debugf(lc, "create_bots.go : create bots passive [%d] and active [%d]", passiveNum, activeNum)
 
 	photoCounter := 2
 	for i := 0; i < passiveNum; i++ {
 		photoCounter += 2
-		userId, token := generateCatDogBot(false, "female", photoCounter, lc)
+		userId, token := generateCatDogBot(false, targetSex, photoCounter, lc)
 		bot := apimodel.Bot{
 			BotId:          userId,
 			BotAccessToken: token,
@@ -53,7 +53,7 @@ func createBots(passiveNum, activeNum int, tableName string, awsDb *dynamodb.Dyn
 	photoCounter = 2
 	for i := 0; i < activeNum; i++ {
 		photoCounter += 2
-		userId, token := generateCatDogBot(true, "female", photoCounter, lc)
+		userId, token := generateCatDogBot(true, targetSex, photoCounter, lc)
 		bot := apimodel.Bot{
 			BotId:          userId,
 			BotAccessToken: token,
