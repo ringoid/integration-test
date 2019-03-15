@@ -398,7 +398,7 @@ func firstPhaseLikesYouTest(lc *lambdacontext.LambdaContext) (string, string, st
 		}
 	}
 
-	resp = apimodel.GetLMM(source_token, resolution, time.Now().Round(time.Millisecond).UnixNano() / 1000000, true, lc)
+	resp = apimodel.GetLMM(source_token, resolution, time.Now().Round(time.Millisecond).UnixNano()/1000000, true, lc)
 	apimodel.Anlogger.Debugf(lc, "firstPhaseLikesYouTest : second feed Resp : %v", resp)
 
 	if len(resp.ErrorCode) != 0 {
@@ -821,6 +821,8 @@ func secondPhaseLikesYouTest(sourceUserId, sourceToke, sp1, sp2, sp3 string, fir
 
 	for index, value := range photoReqiredOrderNewPart {
 		if photoActualOrderNewPart[index] != value {
+			apimodel.Anlogger.Errorf(lc, "secondPhaseLikesYouTest : required : %v", photoReqiredOrderNewPart)
+			apimodel.Anlogger.Errorf(lc, "secondPhaseLikesYouTest : actual   : %v", photoActualOrderNewPart)
 			panic("secondPhaseLikesYouTest : complex test, wrong order")
 		}
 	}
@@ -857,7 +859,7 @@ func secondPhaseLikesYouTest(sourceUserId, sourceToke, sp1, sp2, sp3 string, fir
 		}
 	}
 
-	resp = apimodel.GetLMM(sourceToke, resolution, time.Now().Round(time.Millisecond).UnixNano() / 1000000, true, lc)
+	resp = apimodel.GetLMM(sourceToke, resolution, time.Now().Round(time.Millisecond).UnixNano()/1000000, true, lc)
 	apimodel.Anlogger.Debugf(lc, "secondPhaseLikesYouTest : second feed Resp : %v", resp)
 
 	if len(resp.ErrorCode) != 0 {
@@ -1328,7 +1330,7 @@ func firstPhaseMatchesTest(lc *lambdacontext.LambdaContext) (string, string, str
 		}
 	}
 
-	resp = apimodel.GetLMM(source_token, resolution, time.Now().Round(time.Millisecond).UnixNano() / 1000000, true, lc)
+	resp = apimodel.GetLMM(source_token, resolution, time.Now().Round(time.Millisecond).UnixNano()/1000000, true, lc)
 	apimodel.Anlogger.Debugf(lc, "firstPhaseMatchesTest : second feed Resp : %v", resp)
 
 	if len(resp.ErrorCode) != 0 {
@@ -1855,7 +1857,7 @@ func secondPhaseMatchesYouTest(sourceUserId, sourceToke, sp1, sp2, sp3 string, f
 		}
 	}
 
-	resp = apimodel.GetLMM(sourceToke, resolution, time.Now().Round(time.Millisecond).UnixNano() / 1000000, true, lc)
+	resp = apimodel.GetLMM(sourceToke, resolution, time.Now().Round(time.Millisecond).UnixNano()/1000000, true, lc)
 	apimodel.Anlogger.Debugf(lc, "secondPhaseMatchesYouTest : second feed Resp : %v", resp)
 
 	if len(resp.ErrorCode) != 0 {
