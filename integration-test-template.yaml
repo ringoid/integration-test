@@ -79,12 +79,6 @@ Globals:
             CLEAN_AUTH_DB_FUNCTION_NAME:
               Fn::ImportValue:
                 !Join [ "-", [ !Ref Env, InternalCleanDbAuthFunctionExport] ]
-            CLEAN_IMAGE_DB_FUNCTION_NAME:
-              Fn::ImportValue:
-                !Join [ "-", [ !Ref Env, InternalCleanDbImageFunctionExport] ]
-            CLEAN_RELATIONSHIPS_DB_FUNCTION_NAME:
-              Fn::ImportValue:
-                !Join [ "-", [ !Ref Env, InternalCleanDbRelationshipsFunctionExport] ]
             BOTS_TABLE_NAME: !FindInMap [TableName, BotsTable, !Ref Env]
 
         Tags:

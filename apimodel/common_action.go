@@ -25,8 +25,6 @@ var imageApiEndpoint string
 var actionsApiEndpoint string
 var feedsApiEndpoint string
 var cleanAuthDbFunctionName string
-var cleanImageDbFunctionName string
-var cleanRelationshipsDbFunctionName string
 var secretWord string
 
 var AwsDynamoDB *dynamodb.DynamoDB
@@ -90,23 +88,11 @@ func init() {
 	}
 	Anlogger.Debugf(nil, "lambda-initialization : common_action.go : start with CLEAN_AUTH_DB_FUNCTION_NAME = [%s]", cleanAuthDbFunctionName)
 
-	cleanImageDbFunctionName, ok = os.LookupEnv("CLEAN_IMAGE_DB_FUNCTION_NAME")
-	if !ok {
-		Anlogger.Fatalf(nil, "lambda-initialization : common_action.go : env can not be empty CLEAN_IMAGE_DB_FUNCTION_NAME")
-	}
-	Anlogger.Debugf(nil, "lambda-initialization : common_action.go : start with CLEAN_IMAGE_DB_FUNCTION_NAME = [%s]", cleanImageDbFunctionName)
-
 	BotsTableName, ok = os.LookupEnv("BOTS_TABLE_NAME")
 	if !ok {
 		Anlogger.Fatalf(nil, "lambda-initialization : common_action.go : env can not be empty BOTS_TABLE_NAME")
 	}
 	Anlogger.Debugf(nil, "lambda-initialization : common_action.go : start with BOTS_TABLE_NAME = [%s]", BotsTableName)
-
-	cleanRelationshipsDbFunctionName, ok = os.LookupEnv("CLEAN_RELATIONSHIPS_DB_FUNCTION_NAME")
-	if !ok {
-		Anlogger.Fatalf(nil, "lambda-initialization : common_action.go : env can not be empty CLEAN_RELATIONSHIPS_DB_FUNCTION_NAME")
-	}
-	Anlogger.Debugf(nil, "lambda-initialization : common_action.go : start with CLEAN_RELATIONSHIPS_DB_FUNCTION_NAME = [%s]", cleanRelationshipsDbFunctionName)
 
 	awsSession, err = session.NewSession(aws.NewConfig().
 		WithRegion(Region).WithMaxRetries(MaxRetries).
@@ -131,17 +117,6 @@ func CleanAllDB(lc *lambdacontext.LambdaContext) {
 	if err != nil {
 		panic(err)
 	}
-	Anlogger.Warnf(lc, "common_action.go : successfully clean %s", cleanAuthDbFunctionName)
-	_, err = clientLambda.Invoke(&lambda.InvokeInput{FunctionName: aws.String(cleanImageDbFunctionName),})
-	if err != nil {
-		panic(err)
-	}
-	Anlogger.Warnf(lc, "common_action.go : successfully clean %s", cleanImageDbFunctionName)
-	_, err = clientLambda.Invoke(&lambda.InvokeInput{FunctionName: aws.String(cleanRelationshipsDbFunctionName),})
-	if err != nil {
-		panic(err)
-	}
-	Anlogger.Warnf(lc, "common_action.go : successfully clean %s", cleanRelationshipsDbFunctionName)
 	Anlogger.Warnf(lc, "common_action.go : successfully end clean all DB")
 }
 
