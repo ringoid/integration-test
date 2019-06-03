@@ -106,6 +106,18 @@ func CreateUser(sex string, lc *lambdacontext.LambdaContext) string {
 	return baseResp.AccessToken
 }
 
+func UpdateProfile(accessToken string,
+	property, transport, income, height, educationLevel, hairColor int,
+	lc *lambdacontext.LambdaContext) {
+
+	resp := apimodel.UpdateUserProfile(accessToken, property, transport, income, height, educationLevel, hairColor, true, lc)
+	if len(resp.ErrorCode) != 0 {
+		panic(fmt.Sprintf("error update user profile, error code %s", resp.ErrorCode))
+	}
+
+	apimodel.Anlogger.Debugf(lc, "auth.go : successfully update user profile")
+}
+
 func DeleteUser(token string, lc *lambdacontext.LambdaContext) {
 	baseResp := apimodel.DeleteUserProfile(token, true, lc)
 	if len(baseResp.ErrorCode) != 0 {

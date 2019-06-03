@@ -47,13 +47,13 @@ const (
 	MatchesSourceFeed    = "matches"
 	MessagesSourceFeed   = "messages"
 
-	ViewActionType    = "VIEW"
-	LikeActionType    = "LIKE"
-	UnlikeActionType  = "UNLIKE"
-	BlockActionType   = "BLOCK"
-	MessageActionType = "MESSAGE"
+	ViewActionType     = "VIEW"
+	LikeActionType     = "LIKE"
+	UnlikeActionType   = "UNLIKE"
+	BlockActionType    = "BLOCK"
+	MessageActionType  = "MESSAGE"
+	LocationActionType = "LOCATION"
 )
-
 
 type Bot struct {
 	BotId          string

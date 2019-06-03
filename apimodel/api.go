@@ -74,6 +74,20 @@ func (req UpdateSettingsReq) String() string {
 	return fmt.Sprintf("%#v", req)
 }
 
+type UpdateProfileInfoReq struct {
+	AccessToken    string `json:"accessToken"`
+	Property       int    `json:"property"`
+	Transport      int    `json:"transport"`
+	Income         int    `json:"income"`
+	Height         int    `json:"height"`
+	EducationLevel int    `json:"educationLevel"`
+	HairColor      int    `json:"hairColor"`
+}
+
+func (req UpdateProfileInfoReq) String() string {
+	return fmt.Sprintf("%#v", req)
+}
+
 type GetSettingsResp struct {
 	BaseResponse
 	SafeDistanceInMeter int    `json:"safeDistanceInMeter"` // 0 (default for men) || 25 (default for women)
@@ -221,15 +235,17 @@ func (req ActionReq) String() string {
 }
 
 type Action struct {
-	SourceFeed     string `json:"sourceFeed"`
-	ActionType     string `json:"actionType"`
-	TargetPhotoId  string `json:"targetPhotoId"`
-	TargetUserId   string `json:"targetUserId"`
-	LikeCount      int    `json:"likeCount"`
-	ViewCount      int    `json:"viewCount"`
-	ViewTimeMillis int64  `json:"viewTimeMillis"`
-	Text           string `json:"text"`
-	ActionTime     int64  `json:"actionTime"`
+	SourceFeed     string  `json:"sourceFeed"`
+	ActionType     string  `json:"actionType"`
+	TargetPhotoId  string  `json:"targetPhotoId"`
+	TargetUserId   string  `json:"targetUserId"`
+	LikeCount      int     `json:"likeCount"`
+	ViewCount      int     `json:"viewCount"`
+	ViewTimeMillis int64   `json:"viewTimeMillis"`
+	Text           string  `json:"text"`
+	Lat            float64 `json:"lat"`
+	Lon            float64 `json:"lon"`
+	ActionTime     int64   `json:"actionTime"`
 }
 
 func (req Action) String() string {

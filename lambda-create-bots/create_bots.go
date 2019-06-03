@@ -11,6 +11,7 @@ import (
 	"github.com/ringoid/commons"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
+	"math/rand"
 )
 
 type CreateBotsRequest struct {
@@ -41,6 +42,9 @@ func createBots(startNum, passiveNum, activeNum int, targetSex, tableName string
 		photoCounter += 2
 		//userId, token := generateBot(false, targetSex, i, lc)
 		userId, token := generateCatDogBot(false, targetSex, photoCounter, lc)
+		updateBotsProfile(token, lc)
+		apitests.ActionsLocation(token, 37.34299850463867, -122.05217742919922, lc)
+
 		bot := apimodel.Bot{
 			BotId:          userId,
 			BotAccessToken: token,
@@ -57,6 +61,9 @@ func createBots(startNum, passiveNum, activeNum int, targetSex, tableName string
 		photoCounter += 2
 		//userId, token := generateBot(true, targetSex, i, lc)
 		userId, token := generateCatDogBot(true, targetSex, photoCounter, lc)
+		updateBotsProfile(token, lc)
+		apitests.ActionsLocation(token, 37.34299850463867, -122.05217742919922, lc)
+
 		bot := apimodel.Bot{
 			BotId:          userId,
 			BotAccessToken: token,
@@ -123,4 +130,15 @@ func generateCatDogBot(active bool, sex string, photoNum int, lc *lambdacontext.
 		apitests.UploadCatDogImage(token, sex, active, lc)
 	}
 	return userId, token
+}
+
+func updateBotsProfile(token string, lc *lambdacontext.LambdaContext) {
+	property := rand.Intn(8) * 10
+	transport := rand.Intn(8) * 10
+	income := rand.Intn(5) * 10
+	height := 150 + rand.Intn(50)
+	educationLevel := rand.Intn(7) * 10
+	hairColor := rand.Intn(7) * 10
+
+	apitests.UpdateProfile(token, property, transport, income, height, educationLevel, hairColor, lc)
 }

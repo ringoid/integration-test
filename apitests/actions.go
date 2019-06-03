@@ -5,6 +5,19 @@ import (
 	"../apimodel"
 )
 
+func ActionsLocation(token string, lat, lon float64, lc *lambdacontext.LambdaContext) {
+	actions := []apimodel.Action{apimodel.Action{
+		ActionType: apimodel.LocationActionType,
+		Lat:        lat,
+		Lon:        lon,
+		ActionTime: 123,
+	}}
+	resp := apimodel.Actions(token, actions, true, lc)
+	if len(resp.ErrorCode) != 0 {
+		panic("error when send location action")
+	}
+}
+
 func ActionsWithOldBuildNum(lc *lambdacontext.LambdaContext) {
 	token := CreateUser("female", lc)
 	actions := []apimodel.Action{apimodel.Action{
