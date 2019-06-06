@@ -139,6 +139,7 @@ func updateBotsProfile(token string, lc *lambdacontext.LambdaContext) {
 	height := 150 + rand.Intn(50)
 	educationLevel := rand.Intn(7) * 10
 	hairColor := rand.Intn(7) * 10
+	children := rand.Intn(5) * 10
 
-	apitests.UpdateProfile(token, property, transport, income, height, educationLevel, hairColor, lc)
+	apitests.UpdateProfile(token, property, transport, income, height, educationLevel, hairColor, children,lc)
 }

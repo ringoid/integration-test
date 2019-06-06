@@ -208,11 +208,11 @@ func UpdateUserSettings(accessToken string, safeDistanceInMeter int, pushMessage
 }
 
 func UpdateUserProfile(accessToken string,
-	property, transport, income, height, educationLevel, hairColor int,
+	property, transport, income, height, educationLevel, hairColor, children int,
 	useValidBuildNum bool, lc *lambdacontext.LambdaContext) BaseResponse {
 	Anlogger.Debugf(lc, "common_action.go : update user's profile, token [%s], "+
-		"property [%d], transport [%d], income [%d], height [%d], educationLevel [%d], hairColor [%d], useValidBuildNum [%v]",
-		accessToken, property, transport, income, height, educationLevel, hairColor, useValidBuildNum)
+		"property [%d], transport [%d], income [%d], height [%d], educationLevel [%d], hairColor [%d], children [%d], useValidBuildNum [%v]",
+		accessToken, property, transport, income, height, educationLevel, hairColor, children, useValidBuildNum)
 
 	request := UpdateProfileInfoReq{
 		AccessToken:    accessToken,
@@ -222,6 +222,7 @@ func UpdateUserProfile(accessToken string,
 		Height:         height,
 		EducationLevel: educationLevel,
 		HairColor:      hairColor,
+		Children:       children,
 	}
 	jsonBody, err := json.Marshal(request)
 	if err != nil {
