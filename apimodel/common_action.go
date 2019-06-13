@@ -15,6 +15,7 @@ import (
 	"strings"
 	"github.com/ringoid/commons"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"math/rand"
 )
 
 var Anlogger *commons.Logger
@@ -207,12 +208,66 @@ func UpdateUserSettings(accessToken string, safeDistanceInMeter int, pushMessage
 	return response
 }
 
-func UpdateUserProfile(accessToken string,
+func UpdateUserProfile(accessToken string, isItCat bool,
 	property, transport, income, height, educationLevel, hairColor, children int,
 	useValidBuildNum bool, lc *lambdacontext.LambdaContext) BaseResponse {
 	Anlogger.Debugf(lc, "common_action.go : update user's profile, token [%s], "+
 		"property [%d], transport [%d], income [%d], height [%d], educationLevel [%d], hairColor [%d], children [%d], useValidBuildNum [%v]",
 		accessToken, property, transport, income, height, educationLevel, hairColor, children, useValidBuildNum)
+	botId := UserId(accessToken, lc)
+	r := rand.Intn(100)
+	var jobTitle string
+	if r%3 == 0 {
+		jobTitle = "unknown"
+	} else if isItCat {
+		jobTitle = "Cat"
+	} else {
+		jobTitle = "Dog"
+	}
+	r = rand.Intn(100)
+	var company string
+	if r%3 == 0 {
+		company = "unknown"
+	} else {
+		company = "Ringoid"
+	}
+	var educationText string
+	if r%3 == 0 {
+		educationText = "unknown"
+	} else {
+		educationText = "Политехнический универ"
+	}
+	var about string
+	if r%3 == 0 {
+		about = "unknown"
+	} else {
+		about = "Trying to help you to make Ringoid bug free, fast, usable and valuable"
+	}
+
+	var insta string
+	if r%3 == 0 {
+		insta = "unknown"
+	} else {
+		insta = "@botIG"
+	}
+	var tick string
+	if r%3 == 0 {
+		tick = "unknown"
+	} else {
+		tick = "botTT"
+	}
+	var wlive string
+	if r%3 == 0 {
+		wlive = "unknown"
+	} else {
+		wlive = "Санкт-Петербург"
+	}
+	var wfrom string
+	if r%3 == 0 {
+		wfrom = "unknown"
+	} else {
+		wfrom = "men's brains"
+	}
 
 	request := UpdateProfileInfoReq{
 		AccessToken:    accessToken,
@@ -223,6 +278,15 @@ func UpdateUserProfile(accessToken string,
 		EducationLevel: educationLevel,
 		HairColor:      hairColor,
 		Children:       children,
+		Name:           fmt.Sprintf("Bot  %v", botId[len(botId)-4:]),
+		JobTitle:       jobTitle,
+		Company:        company,
+		EducationText:  educationText,
+		About:          about,
+		Instagram:      insta,
+		TikTok:         tick,
+		WhereLive:      wlive,
+		WhereFrom:      wfrom,
 	}
 	jsonBody, err := json.Marshal(request)
 	if err != nil {

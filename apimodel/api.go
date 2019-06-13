@@ -83,6 +83,15 @@ type UpdateProfileInfoReq struct {
 	EducationLevel int    `json:"educationLevel"`
 	HairColor      int    `json:"hairColor"`
 	Children       int    `json:"children"`
+	Name           string `json:"name"`
+	JobTitle       string `json:"jobTitle"`
+	Company        string `json:"company"`
+	EducationText  string `json:"education"`
+	About          string `json:"about"`
+	Instagram      string `json:"instagram"`
+	TikTok         string `json:"tikTok"`
+	WhereLive      string `json:"whereLive"`
+	WhereFrom      string `json:"whereFrom"`
 }
 
 func (req UpdateProfileInfoReq) String() string {

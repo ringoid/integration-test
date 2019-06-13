@@ -106,11 +106,11 @@ func CreateUser(sex string, lc *lambdacontext.LambdaContext) string {
 	return baseResp.AccessToken
 }
 
-func UpdateProfile(accessToken string,
-	property, transport, income, height, educationLevel, hairColor,children int,
+func UpdateProfile(accessToken string, isItCat bool,
+	property, transport, income, height, educationLevel, hairColor, children int,
 	lc *lambdacontext.LambdaContext) {
 
-	resp := apimodel.UpdateUserProfile(accessToken, property, transport, income, height, educationLevel, hairColor,children, true, lc)
+	resp := apimodel.UpdateUserProfile(accessToken, isItCat, property, transport, income, height, educationLevel, hairColor, children, true, lc)
 	if len(resp.ErrorCode) != 0 {
 		panic(fmt.Sprintf("error update user profile, error code %s", resp.ErrorCode))
 	}

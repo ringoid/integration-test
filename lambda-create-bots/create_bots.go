@@ -42,7 +42,7 @@ func createBots(startNum, passiveNum, activeNum int, targetSex, tableName string
 		photoCounter += 2
 		//userId, token := generateBot(false, targetSex, i, lc)
 		userId, token := generateCatDogBot(false, targetSex, photoCounter, lc)
-		updateBotsProfile(token, lc)
+		updateBotsProfile(token, true, lc)
 		apitests.ActionsLocation(token, 37.34299850463867, -122.05217742919922, lc)
 
 		bot := apimodel.Bot{
@@ -61,7 +61,7 @@ func createBots(startNum, passiveNum, activeNum int, targetSex, tableName string
 		photoCounter += 2
 		//userId, token := generateBot(true, targetSex, i, lc)
 		userId, token := generateCatDogBot(true, targetSex, photoCounter, lc)
-		updateBotsProfile(token, lc)
+		updateBotsProfile(token, false, lc)
 		apitests.ActionsLocation(token, 37.34299850463867, -122.05217742919922, lc)
 
 		bot := apimodel.Bot{
@@ -132,7 +132,7 @@ func generateCatDogBot(active bool, sex string, photoNum int, lc *lambdacontext.
 	return userId, token
 }
 
-func updateBotsProfile(token string, lc *lambdacontext.LambdaContext) {
+func updateBotsProfile(token string, isItCat bool, lc *lambdacontext.LambdaContext) {
 	property := rand.Intn(8) * 10
 	transport := rand.Intn(8) * 10
 	income := rand.Intn(5) * 10
@@ -141,5 +141,5 @@ func updateBotsProfile(token string, lc *lambdacontext.LambdaContext) {
 	hairColor := rand.Intn(7) * 10
 	children := rand.Intn(5) * 10
 
-	apitests.UpdateProfile(token, property, transport, income, height, educationLevel, hairColor, children,lc)
+	apitests.UpdateProfile(token, isItCat, property, transport, income, height, educationLevel, hairColor, children, lc)
 }
