@@ -245,17 +245,18 @@ func (req ActionReq) String() string {
 }
 
 type Action struct {
-	SourceFeed     string  `json:"sourceFeed"`
-	ActionType     string  `json:"actionType"`
-	TargetPhotoId  string  `json:"targetPhotoId"`
-	TargetUserId   string  `json:"targetUserId"`
-	LikeCount      int     `json:"likeCount"`
-	ViewCount      int     `json:"viewCount"`
-	ViewTimeMillis int64   `json:"viewTimeMillis"`
-	Text           string  `json:"text"`
-	Lat            float64 `json:"lat"`
-	Lon            float64 `json:"lon"`
-	ActionTime     int64   `json:"actionTime"`
+	SourceFeed      string  `json:"sourceFeed"`
+	ActionType      string  `json:"actionType"`
+	TargetPhotoId   string  `json:"targetPhotoId"`
+	TargetUserId    string  `json:"targetUserId"`
+	LikeCount       int     `json:"likeCount"`
+	ViewCount       int     `json:"viewCount"`
+	ViewTimeMillis  int64   `json:"viewTimeMillis"`
+	Text            string  `json:"text"`
+	Lat             float64 `json:"lat"`
+	Lon             float64 `json:"lon"`
+	ActionTime      int64   `json:"actionTime"`
+	ClientMessageId string  `json:"clientMsgId"`
 }
 
 func (req Action) String() string {

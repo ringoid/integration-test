@@ -9,6 +9,7 @@ import (
 	"github.com/ringoid/commons"
 	"time"
 	"math/rand"
+	"github.com/satori/go.uuid"
 )
 
 func getAllBot(tableName string, awsDb *dynamodb.DynamoDB, lc *lambdacontext.LambdaContext) ([]apimodel.Bot, error) {
@@ -120,6 +121,7 @@ func wakeUpActiveBots(all []apimodel.Bot, lc *lambdacontext.LambdaContext) error
 				targetPhoto := each.Photos[randPhotoIndex]
 				textFromBot := fmt.Sprintf("Bot [%s] at [%v]", bot.BotId, time.Now().Format("15:04:05"))
 				//randomText := fmt.Sprintf("Message from a bot (rand num %d)", rand.Intn(100))
+				clientMsgId, _ := uuid.NewV4()
 				actions := []apimodel.Action{
 					apimodel.Action{
 						SourceFeed:     apimodel.MatchesSourceFeed,
@@ -132,12 +134,13 @@ func wakeUpActiveBots(all []apimodel.Bot, lc *lambdacontext.LambdaContext) error
 						ActionTime:     time.Now().Round(time.Millisecond).UnixNano() / 1000000,
 					},
 					apimodel.Action{
-						SourceFeed:    apimodel.MatchesSourceFeed,
-						ActionType:    apimodel.MessageActionType,
-						TargetPhotoId: targetPhoto.PhotoId,
-						TargetUserId:  each.UserId,
-						Text:          textFromBot,
-						ActionTime:    time.Now().Round(time.Millisecond).UnixNano() / 1000000,
+						SourceFeed:      apimodel.MatchesSourceFeed,
+						ActionType:      apimodel.MessageActionType,
+						TargetPhotoId:   targetPhoto.PhotoId,
+						TargetUserId:    each.UserId,
+						Text:            textFromBot,
+						ClientMessageId: clientMsgId.String(),
+						ActionTime:      time.Now().Round(time.Millisecond).UnixNano() / 1000000,
 					},
 				}
 				apimodel.Actions(bot.BotAccessToken, actions, true, lc)
@@ -152,6 +155,7 @@ func wakeUpActiveBots(all []apimodel.Bot, lc *lambdacontext.LambdaContext) error
 				}
 				targetPhoto := each.Photos[randPhotoIndex]
 				randomText := fmt.Sprintf("Bot [%s] at [%v]", bot.BotId, time.Now().Format("15:04:05"))
+				clientMsgId, _ := uuid.NewV4()
 				actions := []apimodel.Action{
 					apimodel.Action{
 						SourceFeed:     apimodel.MessagesSourceFeed,
@@ -164,12 +168,13 @@ func wakeUpActiveBots(all []apimodel.Bot, lc *lambdacontext.LambdaContext) error
 						ActionTime:     time.Now().Round(time.Millisecond).UnixNano() / 1000000,
 					},
 					apimodel.Action{
-						SourceFeed:    apimodel.MessagesSourceFeed,
-						ActionType:    apimodel.MessageActionType,
-						TargetPhotoId: targetPhoto.PhotoId,
-						TargetUserId:  each.UserId,
-						Text:          randomText,
-						ActionTime:    time.Now().Round(time.Millisecond).UnixNano() / 1000000,
+						SourceFeed:      apimodel.MessagesSourceFeed,
+						ActionType:      apimodel.MessageActionType,
+						TargetPhotoId:   targetPhoto.PhotoId,
+						TargetUserId:    each.UserId,
+						Text:            randomText,
+						ClientMessageId: clientMsgId.String(),
+						ActionTime:      time.Now().Round(time.Millisecond).UnixNano() / 1000000,
 					},
 				}
 				apimodel.Actions(bot.BotAccessToken, actions, true, lc)

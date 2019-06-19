@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
+	"github.com/satori/go.uuid"
 )
 
 func message(body string, bots []apimodel.Bot, lc *lambdacontext.LambdaContext) error {
@@ -88,6 +89,7 @@ func message(body string, bots []apimodel.Bot, lc *lambdacontext.LambdaContext) 
 	textFromBot := fmt.Sprintf("Bot [%s] at [%v] replying to [%s]",
 		targetBot.BotId, time.Now().Format("15:04:05"), aEvent.Text)
 	//randomText := fmt.Sprintf("Message from a bot (rand num %d)", rand.Intn(100))
+	clientMsgId, _ := uuid.NewV4()
 	actions := []apimodel.Action{
 		apimodel.Action{
 			SourceFeed:     sourceFeed,
@@ -100,12 +102,13 @@ func message(body string, bots []apimodel.Bot, lc *lambdacontext.LambdaContext) 
 			ActionTime:     time.Now().Round(time.Millisecond).UnixNano() / 1000000,
 		},
 		apimodel.Action{
-			SourceFeed:    sourceFeed,
-			ActionType:    apimodel.MessageActionType,
-			TargetPhotoId: targetPhoto.PhotoId,
-			TargetUserId:  aEvent.UserId,
-			Text:          textFromBot,
-			ActionTime:    time.Now().Round(time.Millisecond).UnixNano() / 1000000,
+			SourceFeed:      sourceFeed,
+			ActionType:      apimodel.MessageActionType,
+			TargetPhotoId:   targetPhoto.PhotoId,
+			TargetUserId:    aEvent.UserId,
+			Text:            textFromBot,
+			ClientMessageId: clientMsgId.String(),
+			ActionTime:      time.Now().Round(time.Millisecond).UnixNano() / 1000000,
 		},
 	}
 	apimodel.Actions(targetBot.BotAccessToken, actions, true, lc)
