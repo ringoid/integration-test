@@ -119,9 +119,10 @@ func wakeUpActiveBots(all []apimodel.Bot, lc *lambdacontext.LambdaContext) error
 					randPhotoIndex = rand.Intn(len(each.Photos) - 1)
 				}
 				targetPhoto := each.Photos[randPhotoIndex]
-				textFromBot := fmt.Sprintf("Bot [%s] at [%v]", bot.BotId[0:4], time.Now().Format("15:04:05.000"))
-				//randomText := fmt.Sprintf("Message from a bot (rand num %d)", rand.Intn(100))
 				clientMsgId, _ := uuid.NewV4()
+				textFromBot := fmt.Sprintf("Bot [%s] at [%v] with clientMsgId [%s]", bot.BotId[0:4],
+					time.Now().Format("15:04:05.000"), clientMsgId.String()[0:4])
+				//randomText := fmt.Sprintf("Message from a bot (rand num %d)", rand.Intn(100))
 				actions := []apimodel.Action{
 					apimodel.Action{
 						SourceFeed:     apimodel.MatchesSourceFeed,

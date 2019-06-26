@@ -86,10 +86,10 @@ func message(body string, bots []apimodel.Bot, lc *lambdacontext.LambdaContext) 
 	}
 	targetPhoto := profile.Photos[randPhotoIndex]
 
-	textFromBot := fmt.Sprintf("Bot [%s] at [%v] replying to [%s]",
-		targetBot.BotId[0:4], time.Now().Format("15:04:05.000"), aEvent.Text)
-	//randomText := fmt.Sprintf("Message from a bot (rand num %d)", rand.Intn(100))
 	clientMsgId, _ := uuid.NewV4()
+	textFromBot := fmt.Sprintf("Bot [%s] at [%v] replying to [%s] with clientMsgId [%s]",
+		targetBot.BotId[0:4], time.Now().Format("15:04:05.000"), aEvent.Text, clientMsgId.String()[0:4])
+	//randomText := fmt.Sprintf("Message from a bot (rand num %d)", rand.Intn(100))
 	actions := []apimodel.Action{
 		apimodel.Action{
 			SourceFeed:     sourceFeed,
