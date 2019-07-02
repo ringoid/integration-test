@@ -241,7 +241,7 @@ func UpdateUserProfile(accessToken string, isItCat bool,
 	if r%3 == 0 {
 		about = "unknown"
 	} else {
-		about = "Trying to help you to make Ringoid bug free, fast, usable and valuable"
+		about = fmt.Sprintf("[%s] Trying to help you to make Ringoid bug free, fast, usable and valuable", botId[0:4])
 	}
 
 	var insta string
