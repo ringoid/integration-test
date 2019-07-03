@@ -237,11 +237,24 @@ func UpdateUserProfile(accessToken string, isItCat bool,
 	} else {
 		educationText = "Политехнический универ"
 	}
+	var wlive string
+	if r%3 == 0 {
+		wlive = "unknown"
+	} else {
+		wlive = "Санкт-Петербург"
+	}
+	var wfrom string
+	if r%3 == 0 {
+		wfrom = "unknown"
+	} else {
+		wfrom = "men's brains"
+	}
 	var about string
 	if r%3 == 0 {
 		about = "unknown"
 	} else {
-		about = fmt.Sprintf("[%s] Trying to help you to make Ringoid bug free, fast, usable and valuable", botId[0:4])
+		about = fmt.Sprintf("[%s] : job [%s], company [%s], edu [%s], live [%s], from [%s]",
+			botId[0:4], jobTitle, company, educationText, wlive, wfrom)
 	}
 
 	var insta string
@@ -255,18 +268,6 @@ func UpdateUserProfile(accessToken string, isItCat bool,
 		tick = "unknown"
 	} else {
 		tick = "botTT"
-	}
-	var wlive string
-	if r%3 == 0 {
-		wlive = "unknown"
-	} else {
-		wlive = "Санкт-Петербург"
-	}
-	var wfrom string
-	if r%3 == 0 {
-		wfrom = "unknown"
-	} else {
-		wfrom = "men's brains"
 	}
 
 	request := UpdateProfileInfoReq{
