@@ -36,14 +36,34 @@ func main() {
 
 func createBots(startNum, passiveNum, activeNum int, targetSex, tableName string, awsDb *dynamodb.DynamoDB, lc *lambdacontext.LambdaContext) error {
 	apimodel.Anlogger.Debugf(lc, "create_bots.go : create bots passive [%d] and active [%d]", passiveNum, activeNum)
+	//Toksovo
+	//60.159320, 30.524162
+	//60.158892, 30.523196
+	//60.158176, 30.522853
+	//60.159352, 30.528990
+	//60.161031, 30.524226
+	//Spb
+	//59.976381, 30.313821
+	//59.975413, 30.310774
+	//59.971942, 30.313169
+	//59.970243, 30.321066
+	//59.974954, 30.310895
 
-	photoCounter := 2
+	lats := []float64{60.159320, 60.158892, 60.158176, 60.159352, 60.161031, 59.976381, 59.975413, 59.971942, 59.970243, 59.974954}
+	long := []float64{30.524162, 30.523196, 30.522853, 30.528990, 30.524226, 30.313821, 30.310774, 30.313169, 30.321066, 30.310895}
+	photoCounter := 1
 	for i := startNum; i < startNum+passiveNum; i++ {
 		photoCounter += 2
 		//userId, token := generateBot(false, targetSex, i, lc)
 		userId, token := generateCatDogBot(false, targetSex, photoCounter, lc)
 		updateBotsProfile(token, true, lc)
-		apitests.ActionsLocation(token, 37.34299850463867, -122.05217742919922, lc)
+		lat := 37.34299850463867
+		lon := -122.05217742919922
+		if i <= 9 {
+			lat = lats[i]
+			lon = long[i]
+		}
+		apitests.ActionsLocation(token, lat, lon, lc)
 
 		bot := apimodel.Bot{
 			BotId:          userId,
@@ -56,7 +76,7 @@ func createBots(startNum, passiveNum, activeNum int, targetSex, tableName string
 		}
 	}
 
-	photoCounter = 2
+	photoCounter = 1
 	for i := 0; i < activeNum; i++ {
 		photoCounter += 2
 		//userId, token := generateBot(true, targetSex, i, lc)
