@@ -92,6 +92,7 @@ type UpdateProfileInfoReq struct {
 	TikTok         string `json:"tikTok"`
 	WhereLive      string `json:"whereLive"`
 	WhereFrom      string `json:"whereFrom"`
+	StatusText     string `json:"statusText"`
 }
 
 func (req UpdateProfileInfoReq) String() string {

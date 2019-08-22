@@ -270,6 +270,12 @@ func UpdateUserProfile(accessToken string, isItCat bool,
 		tick = "botTT"
 	}
 
+	var statusText string
+	if r%3 == 0 {
+		statusText = "unknown"
+	} else {
+		statusText = "I need a Hero! :-)"
+	}
 	request := UpdateProfileInfoReq{
 		AccessToken:    accessToken,
 		Property:       property,
@@ -288,6 +294,7 @@ func UpdateUserProfile(accessToken string, isItCat bool,
 		TikTok:         tick,
 		WhereLive:      wlive,
 		WhereFrom:      wfrom,
+		StatusText:     statusText,
 	}
 	jsonBody, err := json.Marshal(request)
 	if err != nil {
