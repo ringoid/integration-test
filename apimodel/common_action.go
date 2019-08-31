@@ -274,7 +274,7 @@ func UpdateUserProfile(accessToken string, isItCat bool,
 	if r%3 == 0 {
 		statusText = "unknown"
 	} else {
-		statusText = "I need a Hero! :-)"
+		statusText = fmt.Sprintf("Status [%s]", botId[0:4])
 	}
 	request := UpdateProfileInfoReq{
 		AccessToken:    accessToken,
@@ -285,7 +285,7 @@ func UpdateUserProfile(accessToken string, isItCat bool,
 		EducationLevel: educationLevel,
 		HairColor:      hairColor,
 		Children:       children,
-		Name:           fmt.Sprintf("Bot  %v", botId[len(botId)-4:]),
+		Name:           fmt.Sprintf("[%s] Bot  %v", botId[0:4], botId[len(botId)-4:]),
 		JobTitle:       jobTitle,
 		Company:        company,
 		EducationText:  educationText,
