@@ -53,6 +53,7 @@ const (
 	BlockActionType    = "BLOCK"
 	MessageActionType  = "MESSAGE"
 	LocationActionType = "LOCATION"
+	ReadMessageActionType = "READ_MESSAGE"
 )
 
 type Bot struct {

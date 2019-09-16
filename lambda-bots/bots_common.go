@@ -77,8 +77,8 @@ func wakeUpActiveBots(all []apimodel.Bot, lc *lambdacontext.LambdaContext) error
 				apimodel.Actions(bot.BotAccessToken, actions, true, lc)
 			}
 
-			llm := apimodel.GetLMM(bot.BotAccessToken, apimodel.PhotoResolution1440x1920, 0, true, lc)
-			for _, each := range llm.LikesYou {
+			gLc := apimodel.GetLc(bot.BotAccessToken, apimodel.PhotoResolution1440x1920, 0, true, lc)
+			for _, each := range gLc.LikesYou {
 				apimodel.Anlogger.Debugf(lc, "bots_common.go : send a like from likesYou for %v", each)
 
 				//send like to random photo
@@ -110,7 +110,7 @@ func wakeUpActiveBots(all []apimodel.Bot, lc *lambdacontext.LambdaContext) error
 				}
 				apimodel.Actions(bot.BotAccessToken, actions, true, lc)
 			}
-			for _, each := range llm.Matches {
+			for _, each := range gLc.Messages {
 				apimodel.Anlogger.Debugf(lc, "bots_common.go : send a message from matches for %v", each)
 
 				//send like to random photo
@@ -123,40 +123,21 @@ func wakeUpActiveBots(all []apimodel.Bot, lc *lambdacontext.LambdaContext) error
 				textFromBot := fmt.Sprintf("Bot [%s] at [%v] with clientMsgId [%s]", bot.BotId[0:4],
 					time.Now().Format("15:04:05.000"), clientMsgId.String()[0:4])
 				//randomText := fmt.Sprintf("Message from a bot (rand num %d)", rand.Intn(100))
-				actions := []apimodel.Action{
-					apimodel.Action{
-						SourceFeed:     apimodel.MatchesSourceFeed,
-						ActionType:     apimodel.ViewActionType,
-						TargetPhotoId:  targetPhoto.PhotoId,
-						TargetUserId:   each.UserId,
-						LikeCount:      0,
-						ViewCount:      1,
-						ViewTimeMillis: 2,
-						ActionTime:     time.Now().Round(time.Millisecond).UnixNano() / 1000000,
-					},
-					apimodel.Action{
-						SourceFeed:      apimodel.MatchesSourceFeed,
-						ActionType:      apimodel.MessageActionType,
-						TargetPhotoId:   targetPhoto.PhotoId,
-						TargetUserId:    each.UserId,
-						Text:            textFromBot,
-						ClientMessageId: clientMsgId.String(),
-						ActionTime:      time.Now().Round(time.Millisecond).UnixNano() / 1000000,
-					},
-				}
-				apimodel.Actions(bot.BotAccessToken, actions, true, lc)
-			}
-			for _, each := range llm.Messages {
-				apimodel.Anlogger.Debugf(lc, "bots_common.go : send a message from messages for %v", each)
 
-				//send like to random photo
-				randPhotoIndex := 0
-				if len(each.Photos) > 1 {
-					randPhotoIndex = rand.Intn(len(each.Photos) - 1)
+				//generate read for each message
+				readMsgs := make([]apimodel.Action, 0)
+				for _, msg := range each.Messages {
+					if !msg.WasYouSender && !msg.HaveBeenRead {
+						readMsgs = append(readMsgs,
+							apimodel.Action{
+								SourceFeed:     apimodel.MessagesSourceFeed,
+								ActionType:     apimodel.ReadMessageActionType,
+								OppositeUserId: each.UserId,
+								MessageId:      msg.MessageId,
+								ActionTime:     time.Now().Round(time.Millisecond).UnixNano() / 1000000})
+					}
 				}
-				targetPhoto := each.Photos[randPhotoIndex]
-				randomText := fmt.Sprintf("Bot [%s] at [%v]", bot.BotId[0:4], time.Now().Format("15:04:05.000"))
-				clientMsgId, _ := uuid.NewV4()
+
 				actions := []apimodel.Action{
 					apimodel.Action{
 						SourceFeed:     apimodel.MessagesSourceFeed,
@@ -173,13 +154,15 @@ func wakeUpActiveBots(all []apimodel.Bot, lc *lambdacontext.LambdaContext) error
 						ActionType:      apimodel.MessageActionType,
 						TargetPhotoId:   targetPhoto.PhotoId,
 						TargetUserId:    each.UserId,
-						Text:            randomText,
+						Text:            textFromBot,
 						ClientMessageId: clientMsgId.String(),
 						ActionTime:      time.Now().Round(time.Millisecond).UnixNano() / 1000000,
 					},
 				}
+				actions = append(actions, readMsgs...)
 				apimodel.Actions(bot.BotAccessToken, actions, true, lc)
 			}
+
 		}
 	}
 	apimodel.Anlogger.Debugf(lc, "bots_common.go : successfully finish active bots jobs")

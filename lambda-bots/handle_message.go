@@ -45,7 +45,7 @@ func message(body string, bots []apimodel.Bot, lc *lambdacontext.LambdaContext) 
 	//ok we found the bot
 	apimodel.Anlogger.Debugf(lc, "message.go : found a bot which receive message %v", targetBot)
 
-	resp := apimodel.GetLMM(targetBot.BotAccessToken, apimodel.PhotoResolution1440x1920, 0, true, lc)
+	resp := apimodel.GetLc(targetBot.BotAccessToken, apimodel.PhotoResolution1440x1920, 0, true, lc)
 
 	sourceFeed := "no"
 	var profile apimodel.Profile
@@ -56,20 +56,13 @@ func message(body string, bots []apimodel.Bot, lc *lambdacontext.LambdaContext) 
 		}
 	}
 
-	if sourceFeed == "no" {
-		for _, each := range resp.Matches {
-			if each.UserId == aEvent.UserId {
-				sourceFeed = apimodel.MatchesSourceFeed
-				profile = each
-			}
-		}
-	}
-
+	messages := make([]apimodel.Message, 0)
 	if sourceFeed == "no" {
 		for _, each := range resp.Messages {
 			if each.UserId == aEvent.UserId {
 				sourceFeed = apimodel.MessagesSourceFeed
 				profile = each
+				messages = each.Messages
 			}
 		}
 	}
@@ -111,6 +104,22 @@ func message(body string, bots []apimodel.Bot, lc *lambdacontext.LambdaContext) 
 			ActionTime:      time.Now().Round(time.Millisecond).UnixNano() / 1000000,
 		},
 	}
+
+	//generate read for each message
+	readMsgs := make([]apimodel.Action, 0)
+	for _, msg := range messages {
+		if !msg.WasYouSender && !msg.HaveBeenRead {
+			readMsgs = append(readMsgs,
+				apimodel.Action{
+					SourceFeed:     apimodel.MessagesSourceFeed,
+					ActionType:     apimodel.ReadMessageActionType,
+					OppositeUserId: aEvent.UserId,
+					MessageId:      msg.MessageId,
+					ActionTime:     time.Now().Round(time.Millisecond).UnixNano() / 1000000})
+		}
+	}
+
+	actions = append(actions, readMsgs...)
 	apimodel.Actions(targetBot.BotAccessToken, actions, true, lc)
 
 	wakeUpActiveBots(bots, lc)

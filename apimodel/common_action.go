@@ -669,6 +669,25 @@ func GetLMM(accessToken, resolution string, lastActionTime int64, useValidBuildN
 	return response
 }
 
+func GetLc(accessToken, resolution string, lastActionTime int64, useValidBuildNum bool, lc *lambdacontext.LambdaContext) GetLcFeedResp {
+	Anlogger.Debugf(lc, "common_action.go : get_lc, token [%s], resolution [%s], lastActionTime [%d], use valid build num [%v]",
+		accessToken, resolution, lastActionTime, useValidBuildNum)
+	params := make(map[string]interface{})
+	params["accessToken"] = accessToken
+	params["resolution"] = resolution
+	params["lastActionTime"] = lastActionTime
+	params["source"] = "messages"
+	jsonBody,_ := json.Marshal(params)
+	respBody := makePostRequest(feedsApiEndpoint, jsonBody, "/get_lc", useValidBuildNum)
+	response := GetLcFeedResp{}
+	err := json.Unmarshal(respBody, &response)
+	if err != nil {
+		panic(err)
+	}
+
+	Anlogger.Infof(lc, "common_action.go : successfully call get_lc, response %v", response)
+	return response
+}
 func UserId(token string, lc *lambdacontext.LambdaContext) string {
 	userId, _, ok, errorStr := commons.DecodeToken(token, secretWord, Anlogger, lc)
 	if !ok {

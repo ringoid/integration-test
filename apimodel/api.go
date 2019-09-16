@@ -212,8 +212,12 @@ func (p Photo) String() string {
 }
 
 type Message struct {
-	WasYouSender bool   `json:"wasYouSender"`
-	Text         string `json:"text"`
+	HaveBeenRead    bool   `json:"haveBeenRead"`
+	WasYouSender    bool   `json:"wasYouSender"`
+	Text            string `json:"text"`
+	MessageId       string `json:"msgId"`
+	ClientMessageId string `json:"clientMsgId"`
+	MessageAt       int64  `json:"msgAt"`
 }
 
 type GetNewFacesResp struct {
@@ -250,14 +254,17 @@ type Action struct {
 	ActionType      string  `json:"actionType"`
 	TargetPhotoId   string  `json:"targetPhotoId"`
 	TargetUserId    string  `json:"targetUserId"`
+	Text            string  `json:"text"`
 	LikeCount       int     `json:"likeCount"`
 	ViewCount       int     `json:"viewCount"`
 	ViewTimeMillis  int64   `json:"viewTimeMillis"`
-	Text            string  `json:"text"`
+	BlockReasonNum  int     `json:"blockReasonNum"`
 	Lat             float64 `json:"lat"`
 	Lon             float64 `json:"lon"`
 	ActionTime      int64   `json:"actionTime"`
 	ClientMessageId string  `json:"clientMsgId"`
+	OppositeUserId  string  `json:"userId"`
+	MessageId       string  `json:"msgId"`
 }
 
 func (req Action) String() string {
@@ -274,4 +281,13 @@ type LMMFeedResp struct {
 
 func (resp LMMFeedResp) String() string {
 	return fmt.Sprintf("%#v", resp)
+}
+
+type GetLcFeedResp struct {
+	BaseResponse
+	RepeatRequestAfter     int64     `json:"repeatRequestAfter"`
+	AllLikesYouProfilesNum int       `json:"allLikesYouProfilesNum"`
+	AllMessagesProfilesNum int       `json:"allMessagesProfilesNum"`
+	LikesYou               []Profile `json:"likesYou"`
+	Messages               []Profile `json:"messages"`
 }

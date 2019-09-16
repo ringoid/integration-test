@@ -44,7 +44,7 @@ func like(body string, bots []apimodel.Bot, lc *lambdacontext.LambdaContext) err
 	//ok we found the bot
 	apimodel.Anlogger.Debugf(lc, "like.go : found a bot which receive like %v", targetBot)
 
-	resp := apimodel.GetLMM(targetBot.BotAccessToken, apimodel.PhotoResolution1440x1920, 0, true, lc)
+	resp := apimodel.GetLc(targetBot.BotAccessToken, apimodel.PhotoResolution1440x1920, 0, true, lc)
 
 	sourceFeed := "no"
 	var profile apimodel.Profile
@@ -52,15 +52,6 @@ func like(body string, bots []apimodel.Bot, lc *lambdacontext.LambdaContext) err
 		if each.UserId == aEvent.UserId {
 			sourceFeed = apimodel.WhoLikedMeSourceFeed
 			profile = each
-		}
-	}
-
-	if sourceFeed == "no" {
-		for _, each := range resp.Matches {
-			if each.UserId == aEvent.UserId {
-				sourceFeed = apimodel.MatchesSourceFeed
-				profile = each
-			}
 		}
 	}
 
